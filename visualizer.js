@@ -54,7 +54,7 @@ export class ShipyardVisualizer {
       this.gridElement.appendChild(laneCol);
     }
 
-    // 2. Crear el Carril 0 vertical (De transferencia vertical)
+    // 2. Crear el Carril 0 vertical (De transferencia vertical, más corto para dejar paso al transfer superior)
     const carril0Col = document.createElement('div');
     carril0Col.className = 'lane-column lane-transfer';
     carril0Col.dataset.status = 'carril_0';
@@ -62,9 +62,9 @@ export class ShipyardVisualizer {
 
     carril0Col.style.position = 'absolute';
     carril0Col.style.left = `${8 * 75 + 10}px`; // 610px
-    carril0Col.style.top = '10px';
+    carril0Col.style.top = '75px'; // Inicia abajo del transfer superior
     carril0Col.style.width = '65px';
-    carril0Col.style.height = '200px';
+    carril0Col.style.height = '135px';
 
     const label0 = document.createElement('div');
     label0.className = 'lane-label';
@@ -81,7 +81,7 @@ export class ShipyardVisualizer {
     this.setupDropTarget(carril0Col);
     this.gridElement.appendChild(carril0Col);
 
-    // 3. Crear la Rampa de Varada (Slipway / Cuna de Varada)
+    // 3. Crear la Rampa de Varada (Slipway / Cuna de Varada, más corta para dejar paso al transfer superior)
     const slipwayCol = document.createElement('div');
     slipwayCol.className = 'slipway-column';
     slipwayCol.dataset.status = 'cuna_varada';
@@ -89,9 +89,9 @@ export class ShipyardVisualizer {
 
     slipwayCol.style.position = 'absolute';
     slipwayCol.style.left = '760px';
-    slipwayCol.style.top = '10px';
+    slipwayCol.style.top = '75px'; // Inicia abajo del transfer superior
     slipwayCol.style.width = '150px';
-    slipwayCol.style.height = '200px';
+    slipwayCol.style.height = '135px';
 
     const slipwayTitle = document.createElement('div');
     slipwayTitle.className = 'slipway-title';
@@ -108,16 +108,16 @@ export class ShipyardVisualizer {
     this.setupDropTarget(slipwayCol);
     this.gridElement.appendChild(slipwayCol);
 
-    // 4. Crear el carro de Transferencia de Varada (Varada -> Carril 0)
+    // 4. Crear el carro de Transferencia de Varada (Ubicado en la parte superior)
     const transVaradaSlot = document.createElement('div');
     transVaradaSlot.className = 'transfer-varada-slot';
     transVaradaSlot.dataset.status = 'transfer_varada';
     transVaradaSlot.dataset.lane = 'TRANSFER_VARADA';
 
     transVaradaSlot.style.position = 'absolute';
-    transVaradaSlot.style.left = '675px';
-    transVaradaSlot.style.top = '80px';
-    transVaradaSlot.style.width = '85px';
+    transVaradaSlot.style.left = '685px'; // Centrado entre Carril 0 y Varada
+    transVaradaSlot.style.top = '10px';   // En la parte superior
+    transVaradaSlot.style.width = '75px';
     transVaradaSlot.style.height = '60px';
 
     const varadaTransBoat = boats.find(b => b.status === 'transfer_varada');
@@ -210,12 +210,12 @@ export class ShipyardVisualizer {
     popaTrack.style.height = '60px';
     this.gridElement.appendChild(popaTrack);
 
-    // Vía de transferencia lateral superior (Varada a Carril 0)
+    // Vía de transferencia superior (Desde Carril 0 hasta extremo de Varada)
     const varadaTrack = document.createElement('div');
     varadaTrack.className = 'transfer-track-bg';
-    varadaTrack.style.left = '675px';
-    varadaTrack.style.top = '80px';
-    varadaTrack.style.width = '85px'; // Distancia intermedia
+    varadaTrack.style.left = '610px'; // Empieza en carril 0
+    varadaTrack.style.top = '10px';   // En la parte superior
+    varadaTrack.style.width = '300px'; // Se extiende cruzando Carril 0 y Varada
     varadaTrack.style.height = '60px';
     this.gridElement.appendChild(varadaTrack);
   }

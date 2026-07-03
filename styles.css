@@ -1235,3 +1235,18 @@ header {
 .search-input-wrapper input {
   padding-left: 32px;
 }
+
+/* Nueva Bahía de Espera Externa */
+.sea-bay-outside {
+  background: linear-gradient(180deg, rgba(16, 24, 48, 0.4) 0%, rgba(9, 13, 26, 0.7) 100%);
+  border: 1px dashed rgba(59, 130, 246, 0.25);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+  margin-top: 4px;
+  transition: var(--transition-fast);
+}
+
+.sea-bay-outside .sea-boats-list {
+  min-height: 50px;
+}
