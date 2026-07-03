@@ -1,0 +1,1153 @@
+/* Hojas de Estilo Premium - Sistema de Control de Astillero */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Paleta de Colores HSL y Gradientes */
+  --bg-primary: #0b0f19;
+  --bg-secondary: #131a2c;
+  --bg-card: rgba(22, 30, 49, 0.7);
+  --bg-card-hover: rgba(30, 41, 67, 0.8);
+  --border-color: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(59, 130, 246, 0.5);
+  
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dark: #64748b;
+  
+  /* Estados e Indicadores */
+  --color-primary: #3b82f6; /* Azul Eléctrico */
+  --color-success: #10b981; /* Verde Esmeralda (Ocupado/Ok) */
+  --color-warning: #f59e0b; /* Amarillo/Ámbar (Varada/Atención) */
+  --color-danger: #ef4444;  /* Rojo (Alerta) */
+  --color-info: #06b6d4;    /* Cyan */
+  --color-accent: #8b5cf6;  /* Violeta */
+
+  --gradient-card: linear-gradient(135deg, rgba(22, 30, 49, 0.8) 0%, rgba(15, 22, 38, 0.8) 100%);
+  --gradient-glow: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+  --glow-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+  
+  --font-title: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset y Estilos Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(30, 41, 67, 0.3) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(17, 24, 39, 0.5) 0px, transparent 50%),
+    radial-gradient(at 50% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%);
+  background-attachment: fixed;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Estructura Principal */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 1.5rem;
+  gap: 1.5rem;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+/* Header & Stats Dashboard */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.brand-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-info));
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--glow-shadow);
+}
+
+.logo-icon svg {
+  width: 24px;
+  height: 24px;
+  color: #fff;
+}
+
+.brand-info h1 {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(to right, #ffffff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-info p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* Panel de Indicadores de Carriles (Top Bar) */
+.lane-status-bar {
+  display: flex;
+  gap: 6px;
+  background: rgba(22, 30, 49, 0.5);
+  padding: 6px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+}
+
+.status-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: var(--transition-fast);
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.status-badge span {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 1px;
+}
+
+.status-badge.free {
+  background: rgba(30, 41, 59, 0.8);
+  color: var(--text-muted);
+}
+
+.status-badge.occupied {
+  background: var(--color-success);
+  color: #0b0f19;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+}
+
+.status-badge.varada-status {
+  background: var(--color-warning);
+  color: #0b0f19;
+  width: auto;
+  padding: 0 12px;
+  box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+}
+
+/* Dashboard Metrics Row */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: var(--color-primary);
+}
+
+.metric-card.active-boats::before { background: var(--color-primary); }
+.metric-card.waiting-boats::before { background: var(--color-warning); }
+.metric-card.occupied-lanes::before { background: var(--color-success); }
+.metric-card.efficiency::before { background: var(--color-accent); }
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.metric-icon {
+  background: rgba(255, 255, 255, 0.05);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main);
+}
+
+.metric-card.active-boats .metric-icon { color: var(--color-primary); }
+.metric-card.waiting-boats .metric-icon { color: var(--color-warning); }
+.metric-card.occupied-lanes .metric-icon { color: var(--color-success); }
+.metric-card.efficiency .metric-icon { color: var(--color-accent); }
+
+.metric-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-value {
+  font-family: var(--font-title);
+  font-size: 1.8rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.metric-label {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-top: 4px;
+}
+
+/* Contenido Principal en dos columnas */
+.main-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Cartas de Contenedor */
+.card-container {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  backdrop-filter: blur(20px);
+  position: relative;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 10px;
+}
+
+.card-header h2 {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-header h2 svg {
+  color: var(--color-primary);
+  width: 20px;
+  height: 20px;
+}
+
+/* El Visualizador del Astillero */
+.shipyard-map-container {
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.shipyard-viewport {
+  min-width: 900px;
+  background: linear-gradient(180deg, #131a2c 0%, #0d1220 100%);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  padding: 2rem 1.5rem;
+  position: relative;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Distribución del Astillero */
+.shipyard-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr) 180px; /* 9 carriles (0-8) + Varada (180px) */
+  gap: 14px;
+  height: 380px;
+  position: relative;
+}
+
+/* Zona del Mar (Parte Inferior/Bahía) */
+.sea-bay {
+  grid-column: 1 / -1;
+  height: 90px;
+  background: linear-gradient(0deg, rgba(30, 64, 175, 0.35) 0%, rgba(30, 58, 138, 0.1) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-top: none;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  margin-top: 15px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.sea-bay-title {
+  font-family: var(--font-title);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: rgba(96, 165, 250, 0.7);
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+
+.sea-boats-list {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  min-height: 55px;
+  align-items: center;
+  padding-bottom: 4px;
+}
+
+/* Carriles Individuales */
+.lane-column {
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 2px dashed rgba(255, 255, 255, 0.1);
+  border-right: 2px dashed rgba(255, 255, 255, 0.1);
+  border-top: 3px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 10px 4px;
+  transition: var(--transition-normal);
+}
+
+.lane-column::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Carril 0 de Transferencia (Fondo distintivo) */
+.lane-column.lane-transfer {
+  background: rgba(59, 130, 246, 0.03);
+  border-left: 2px solid rgba(59, 130, 246, 0.2);
+  border-right: 2px solid rgba(59, 130, 246, 0.2);
+  border-top-color: var(--color-primary);
+}
+
+.lane-column.lane-transfer::before {
+  content: 'TRANSFER';
+  position: absolute;
+  top: 40%;
+  transform: rotate(-90deg);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(59, 130, 246, 0.15);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.lane-label {
+  position: absolute;
+  top: -24px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Rampa de Varada (Slipway) */
+.slipway-column {
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.02) 0%, rgba(245, 158, 11, 0.08) 100%);
+  border: 2px solid rgba(245, 158, 11, 0.2);
+  border-bottom: none;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+}
+
+.slipway-column::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(245, 158, 11, 0.05),
+    rgba(245, 158, 11, 0.05) 10px,
+    rgba(245, 158, 11, 0.1) 10px,
+    rgba(245, 158, 11, 0.1) 20px
+  );
+  border-left: 2px solid rgba(245, 158, 11, 0.15);
+  border-right: 2px solid rgba(245, 158, 11, 0.15);
+  z-index: 1;
+}
+
+.slipway-title {
+  position: absolute;
+  top: -24px;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--color-warning);
+}
+
+/* Dragging Hover states */
+.lane-column.drag-over,
+.slipway-column.drag-over {
+  background: rgba(16, 185, 129, 0.08);
+  border-color: var(--color-success);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+}
+
+.lane-column.drag-over-invalid,
+.slipway-column.drag-over-invalid {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: var(--color-danger);
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+/* Carriles Ocupados */
+.lane-column.occupied,
+.slipway-column.occupied {
+  border-top-style: solid;
+}
+
+/* Barcos (Vessels) en Vista 2D */
+.boat-vessel {
+  width: 90%;
+  background: #1e293b;
+  border-radius: 6px 6px 12px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px;
+  cursor: grab;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  z-index: 2;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+.boat-vessel:active {
+  cursor: grabbing;
+}
+
+.boat-vessel.dragging {
+  opacity: 0.4;
+  transform: scale(0.95);
+}
+
+/* Diseños de Cascos según el tipo */
+.boat-vessel::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  width: 100%;
+  height: 12px;
+  background: inherit;
+  border: inherit;
+  border-bottom: none;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+
+.boat-vessel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 10px var(--boat-color-glow);
+  z-index: 10;
+}
+
+/* Contenido Interno del Barco */
+.boat-hull-details {
+  width: 100%;
+  text-align: center;
+  color: var(--text-main);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.boat-vessel-name {
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 0.75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boat-vessel-reg {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+}
+
+.boat-vessel-type-badge {
+  font-size: 0.55rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* Barra de Progreso del Trabajo en el Barco */
+.boat-progress-bar {
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.boat-progress-fill {
+  height: 100%;
+  background: var(--color-success);
+}
+
+/* Barcos en el Mar (Cola de espera) */
+.sea-boats-list .boat-vessel {
+  width: 100px;
+  height: 50px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.sea-boats-list .boat-vessel::before {
+  clip-path: polygon(0% 50%, 25% 0%, 100% 0%, 100% 100%, 25% 100%);
+  width: 12px;
+  height: 100%;
+  top: 0;
+  left: -11px;
+  border-right: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sea-boats-list .boat-vessel-name {
+  font-size: 0.7rem;
+}
+
+.sea-boats-list .boat-vessel-reg,
+.sea-boats-list .boat-vessel-type-badge,
+.sea-boats-list .boat-progress-bar {
+  display: none; /* Simplificado en el mar */
+}
+
+/* Estilos de barcos en diferentes carriles */
+.lane-column .boat-vessel {
+  position: absolute;
+  top: 50px; /* Posicionarlo en el medio */
+  height: 220px;
+  justify-content: space-between;
+  border-bottom-width: 4px;
+}
+
+.slipway-column .boat-vessel {
+  position: absolute;
+  top: 70px;
+  height: 180px;
+  justify-content: space-between;
+  z-index: 5;
+}
+
+/* Grúa Móvil en el Astillero (Elemento Decorativo de Fondo/Acento) */
+.yard-crane {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.3;
+  transition: all 0.5s ease;
+}
+
+/* Gantt Chart (Cronograma de Ocupación) */
+.gantt-chart-wrapper {
+  overflow-x: auto;
+  margin-top: 10px;
+}
+
+.gantt-table {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+}
+
+.gantt-table th,
+.gantt-table td {
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  text-align: left;
+}
+
+.gantt-table th {
+  background: rgba(255, 255, 255, 0.02);
+  font-family: var(--font-title);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.gantt-lane-cell {
+  font-family: var(--font-title);
+  font-weight: 700;
+  color: var(--text-main);
+  width: 120px;
+}
+
+.gantt-timeline-cell {
+  position: relative;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.005);
+}
+
+.gantt-bar {
+  position: absolute;
+  height: 26px;
+  top: 9px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Panel Lateral Derecho: Formularios y Logs */
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Tabs para el Panel Lateral */
+.sidebar-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 4px;
+  border-radius: var(--radius-md);
+  margin-bottom: 1rem;
+}
+
+.tab-btn {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-muted);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-title);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.tab-btn.active {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Formularios Modernos */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  transition: var(--transition-fast);
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* Paleta de Colores Form */
+.color-selector {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.color-option {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: var(--transition-fast);
+}
+
+.color-option.selected {
+  border-color: #fff;
+  transform: scale(1.15);
+}
+
+/* Botones Modernos */
+.btn-primary {
+  width: 100%;
+  background: linear-gradient(135deg, var(--color-primary), #1d4ed8);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: #fff;
+  padding: 10px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
+  filter: brightness(1.1);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Panel de Detalles del Barco */
+.boat-details-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.no-boat-selected {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  border: 1px dashed rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+}
+
+.no-boat-selected svg {
+  width: 48px;
+  height: 48px;
+  color: rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.detail-header {
+  border-left: 4px solid var(--boat-color, var(--color-primary));
+  padding-left: 10px;
+}
+
+.detail-header h3 {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.detail-header span {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.02);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.detail-item label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+}
+
+.detail-item value {
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.detail-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.btn-action {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-title);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-main);
+}
+
+.btn-action:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.btn-action.success {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--color-success);
+}
+
+.btn-action.success:hover {
+  background: var(--color-success);
+  color: #0b0f19;
+}
+
+.btn-action.danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: var(--color-danger);
+}
+
+.btn-action.danger:hover {
+  background: var(--color-danger);
+  color: #fff;
+}
+
+/* Historial / Auditoría Feed */
+.history-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.history-item {
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 0.8rem;
+}
+
+.history-item-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.history-badge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+.history-badge.action-ingreso { background: rgba(59, 130, 246, 0.15); color: var(--color-primary); }
+.history-badge.action-varada { background: rgba(245, 158, 11, 0.15); color: var(--color-warning); }
+.history-badge.action-traslado { background: rgba(6, 182, 212, 0.15); color: var(--color-info); }
+.history-badge.action-botadura { background: rgba(16, 185, 129, 0.15); color: var(--color-success); }
+.history-badge.action-edicion { background: rgba(139, 92, 246, 0.15); color: var(--color-accent); }
+.history-badge.action-eliminacion { background: rgba(239, 68, 68, 0.15); color: var(--color-danger); }
+
+.history-time {
+  color: var(--text-dark);
+  font-size: 0.7rem;
+}
+
+.history-boat {
+  font-weight: 700;
+  color: var(--text-main);
+  margin-right: 4px;
+}
+
+.history-details {
+  color: var(--text-muted);
+}
+
+/* Modales y Diálogos */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(11, 15, 25, 0.8);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.modal-overlay.active {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-content {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  width: 90%;
+  max-width: 500px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  transform: translateY(-20px);
+  transition: transform var(--transition-normal);
+}
+
+.modal-overlay.active .modal-content {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 10px;
+}
+
+.modal-header h3 {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.btn-close:hover {
+  color: var(--text-main);
+}
+
+/* Toast Notifications (Notificaciones flotantes) */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10000;
+}
+
+.toast {
+  background: rgba(22, 30, 49, 0.95);
+  border-left: 4px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  color: var(--text-main);
+  min-width: 280px;
+  max-width: 400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+  transform: translateX(120%);
+  transition: transform var(--transition-normal);
+}
+
+.toast.active {
+  transform: translateX(0);
+}
+
+.toast.success { border-left-color: var(--color-success); }
+.toast.warning { border-left-color: var(--color-warning); }
+.toast.error { border-left-color: var(--color-danger); }
+
+.toast-message {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.toast-close:hover {
+  color: var(--text-main);
+}
+
+/* Estilos para el Buscador / Filtro */
+.search-filter-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.search-input-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.search-input-wrapper svg {
+  position: absolute;
+  left: 10px;
+  top: 9px;
+  color: var(--text-muted);
+  width: 16px;
+  height: 16px;
+}
+
+.search-input-wrapper input {
+  padding-left: 32px;
+}

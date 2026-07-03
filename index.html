@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Control de Astillero - Gestión de Carena</title>
+  <!-- SEO & Estilos -->
+  <meta name="description" content="Sistema interactivo de gestión de espacio en astillero para la carena de barcos.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- HEADER -->
+    <header>
+      <div class="brand-section">
+        <div class="logo-icon">
+          <!-- SVG Logo Barco/Timón -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ship"><path d="M2 21h20"/><path d="M19.3 14.8C21.1 13.5 22 11.7 22 10c0-1.8-.9-3.5-2.7-4.8C17.5 3.8 15 3 12 3s-5.5.8-7.3 2.2C2.9 6.5 2 8.2 2 10c0 1.7.9 3.5 2.7 4.8C6.5 16.2 9 17 12 17s5.5-.8 7.3-2.2Z"/><path d="M12 3v14"/><path d="M12 10h10"/><path d="M12 10H2"/><path d="m12 3-5 5"/><path d="m12 3 5 5"/></svg>
+        </div>
+        <div class="brand-info">
+          <h1>ESTADO DEL ASTILLERO</h1>
+          <p>Control Espacial & Programación de Carena</p>
+        </div>
+      </div>
+
+      <!-- Barra rápida de estados superior (inspirada en la imagen de referencia) -->
+      <div class="lane-status-bar" id="lane-status-bar">
+        <!-- Generado dinámicamente: badges para 8, 7, 6, 5, 4, 3, 2, 1, 0, VARADA -->
+      </div>
+    </header>
+
+    <!-- METRICS DASHBOARD -->
+    <div class="metrics-row" id="metrics-dashboard">
+      <div class="metric-card active-boats">
+        <div class="metric-icon">
+          <i data-lucide="anchor"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value" id="stat-active">0</span>
+          <span class="metric-label">Barcos Totales</span>
+        </div>
+      </div>
+      
+      <div class="metric-card waiting-boats">
+        <div class="metric-icon">
+          <i data-lucide="waves"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value" id="stat-waiting">0</span>
+          <span class="metric-label">Pendientes (Bahía)</span>
+        </div>
+      </div>
+
+      <div class="metric-card occupied-lanes">
+        <div class="metric-icon">
+          <i data-lucide="layout-grid"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value" id="stat-occupancy">0/10</span>
+          <span class="metric-label">Slots Ocupados</span>
+        </div>
+      </div>
+
+      <div class="metric-card efficiency">
+        <div class="metric-icon">
+          <i data-lucide="gauge"></i>
+        </div>
+        <div class="metric-info">
+          <span class="metric-value" id="stat-efficiency">0%</span>
+          <span class="metric-label">Ocupación Astillero</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN TWO-COLUMN LAYOUT -->
+    <div class="main-layout">
+      
+      <!-- COLUMNA IZQUIERDA: VISUALIZADOR + GANTT -->
+      <div class="left-panel">
+        
+        <!-- Shipyard Visualizer Card -->
+        <div class="card-container">
+          <div class="card-header">
+            <h2>
+              <i data-lucide="map"></i>
+              Mapa de Distribución Física
+            </h2>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <i data-lucide="info" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i>
+              Arrastre los barcos para trasladar. Respete el flujo de maniobra.
+            </div>
+          </div>
+          
+          <div class="shipyard-map-container">
+            <div class="shipyard-viewport">
+              
+              <!-- Carriles y Varada -->
+              <div class="shipyard-grid" id="shipyard-grid">
+                <!-- Se inyecta dinámicamente desde visualizer.js -->
+              </div>
+              
+              <!-- Bahía del Mar (Entrada / Espera / Dropzone de botadura) -->
+              <div class="sea-bay" id="sea-bay-drop">
+                <div class="sea-bay-title">Bahía de Espera / Mar</div>
+                <div class="sea-boats-list" id="sea-boats">
+                  <!-- Se inyecta dinámicamente desde visualizer.js -->
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Gantt Timeline Card -->
+        <div class="card-container">
+          <div class="card-header">
+            <h2>
+              <i data-lucide="calendar-range"></i>
+              Cronograma de Ocupación (Próximos 30 Días)
+            </h2>
+          </div>
+          <div class="gantt-chart-wrapper">
+            <table class="gantt-table">
+              <thead>
+                <tr id="gantt-header-row">
+                  <th>Carril</th>
+                  <!-- Días/Fechas generados dinámicamente -->
+                </tr>
+              </thead>
+              <tbody id="gantt-body">
+                <!-- Filas de carriles inyectadas dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUMNA DERECHA: SIDEBAR DE CONTROL -->
+      <div class="right-sidebar">
+        
+        <!-- Sidebar Card -->
+        <div class="card-container" style="height: 100%; display: flex; flex-direction: column;">
+          
+          <!-- Tabs de navegación lateral -->
+          <div class="sidebar-tabs">
+            <button class="tab-btn active" data-tab="tab-inspector">
+              <i data-lucide="eye" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
+              Inspector
+            </button>
+            <button class="tab-btn" data-tab="tab-nuevo">
+              <i data-lucide="plus-circle" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
+              Registrar Barco
+            </button>
+            <button class="tab-btn" data-tab="tab-registro">
+              <i data-lucide="history" style="width:14px; height:14px; display:inline-block; vertical-align:middle; margin-right:4px;"></i>
+              Bitácora
+            </button>
+          </div>
+
+          <!-- CONTENIDO TAB: INSPECTOR -->
+          <div class="tab-content active" id="tab-inspector">
+            <div id="inspector-container">
+              <!-- Carga dinámicamente desde app.js (Detalles o Estado Vacío) -->
+              <div class="no-boat-selected">
+                <i data-lucide="mouse-pointer-click"></i>
+                <p>Seleccione un barco en el mapa o en la bahía para inspeccionar detalles técnicos y operaciones.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTENIDO TAB: REGISTRO NUEVO BARCO -->
+          <div class="tab-content" id="tab-nuevo">
+            <form id="new-boat-form" autocomplete="off">
+              <div class="form-group">
+                <label for="new-boat-name">Nombre del Barco *</label>
+                <input type="text" id="new-boat-name" class="form-control" placeholder="Ej. B/P COPEINCA" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="new-boat-reg">Matrícula *</label>
+                <input type="text" id="new-boat-reg" class="form-control" placeholder="Ej. CO-1234-PM" required>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="new-boat-type">Tipo</label>
+                  <select id="new-boat-type" class="form-control">
+                    <option value="Pesquero">Pesquero</option>
+                    <option value="Carguero">Carguero</option>
+                    <option value="Remolcador">Remolcador</option>
+                    <option value="Yate">Yate</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="new-boat-owner">Armador / Cliente</label>
+                  <input type="text" id="new-boat-owner" class="form-control" placeholder="Ej. TASA">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="new-boat-length">Eslora (m) *</label>
+                  <input type="number" id="new-boat-length" class="form-control" step="0.1" min="1" placeholder="Ej. 42.5" required>
+                </div>
+                <div class="form-group">
+                  <label for="new-boat-beam">Manga (m) *</label>
+                  <input type="number" id="new-boat-beam" class="form-control" step="0.1" min="1" placeholder="Ej. 9.2" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="new-boat-weight">TRB (Tons) *</label>
+                  <input type="number" id="new-boat-weight" class="form-control" min="1" placeholder="Ej. 350" required>
+                </div>
+                <div class="form-group">
+                  <label for="new-boat-days">Días Carena Estimado</label>
+                  <input type="number" id="new-boat-days" class="form-control" min="1" value="10" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Color Identificador</label>
+                <div class="color-selector" id="new-color-selector">
+                  <div class="color-option selected" style="background-color: #3b82f6;" data-color="#3b82f6"></div>
+                  <div class="color-option" style="background-color: #06b6d4;" data-color="#06b6d4"></div>
+                  <div class="color-option" style="background-color: #10b981;" data-color="#10b981"></div>
+                  <div class="color-option" style="background-color: #f59e0b;" data-color="#f59e0b"></div>
+                  <div class="color-option" style="background-color: #ec4899;" data-color="#ec4899"></div>
+                  <div class="color-option" style="background-color: #8b5cf6;" data-color="#8b5cf6"></div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="new-boat-notes">Notas de Trabajo</label>
+                <textarea id="new-boat-notes" class="form-control" rows="3" placeholder="Inspección de casco, limpieza, pintura..."></textarea>
+              </div>
+
+              <button type="submit" class="btn-primary" style="margin-top: 10px;">
+                <i data-lucide="plus"></i>
+                Registrar a la Cola
+              </button>
+            </form>
+          </div>
+
+          <!-- CONTENIDO TAB: AUDITORIA / BITACORA -->
+          <div class="tab-content" id="tab-registro">
+            <div class="search-filter-row">
+              <div class="search-input-wrapper">
+                <i data-lucide="search"></i>
+                <input type="text" id="log-search" class="form-control" placeholder="Buscar movimientos...">
+              </div>
+            </div>
+            <div class="history-feed" id="history-feed-container">
+              <!-- Logs inyectados dinámicamente -->
+            </div>
+            <button id="btn-clear-db" class="btn-action danger" style="margin-top: 15px; font-size: 0.8rem;">
+              <i data-lucide="rotate-ccw" style="width:12px; height:12px;"></i>
+              Restablecer Datos de Fábrica
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MODAL DE EDICIÓN DE BARCO -->
+  <div class="modal-overlay" id="edit-boat-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="edit-modal-title">Editar Información Técnica</h3>
+        <button class="btn-close" id="btn-close-modal">&times;</button>
+      </div>
+      <form id="edit-boat-form">
+        <input type="hidden" id="edit-boat-id">
+        
+        <div class="form-group">
+          <label for="edit-boat-name">Nombre del Barco</label>
+          <input type="text" id="edit-boat-name" class="form-control" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="edit-boat-reg">Matrícula</label>
+          <input type="text" id="edit-boat-reg" class="form-control" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-boat-type">Tipo</label>
+            <select id="edit-boat-type" class="form-control">
+              <option value="Pesquero">Pesquero</option>
+              <option value="Carguero">Carguero</option>
+              <option value="Remolcador">Remolcador</option>
+              <option value="Yate">Yate</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="edit-boat-owner">Armador / Cliente</label>
+            <input type="text" id="edit-boat-owner" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-boat-length">Eslora (m)</label>
+            <input type="number" id="edit-boat-length" class="form-control" step="0.1" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-boat-beam">Manga (m)</label>
+            <input type="number" id="edit-boat-beam" class="form-control" step="0.1" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-boat-weight">TRB (Tons)</label>
+            <input type="number" id="edit-boat-weight" class="form-control" required>
+          </div>
+          <div class="form-group">
+            <label for="edit-boat-progress">Progreso de Trabajo (%)</label>
+            <input type="number" id="edit-boat-progress" class="form-control" min="0" max="100">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="edit-boat-entry">Fecha Entrada</label>
+            <input type="date" id="edit-boat-entry" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="edit-boat-departure">Estimada Salida</label>
+            <input type="date" id="edit-boat-departure" class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="edit-boat-notes">Notas de Carena</label>
+          <textarea id="edit-boat-notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary" style="margin-top: 10px;">
+          <i data-lucide="save"></i>
+          Guardar Cambios
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR DE TOAST NOTIFICATIONS -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Inicializador Web App -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
