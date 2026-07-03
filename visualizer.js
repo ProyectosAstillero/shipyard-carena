@@ -31,9 +31,9 @@ export class ShipyardVisualizer {
 
       // Ubicación absoluta
       laneCol.style.position = 'absolute';
-      laneCol.style.left = `${(8 - lane) * 75 + 10}px`;
+      laneCol.style.left = `calc(${(8 - lane) * 9.5}% + 0.5%)`;
       laneCol.style.top = '10px';
-      laneCol.style.width = '65px';
+      laneCol.style.width = '8%';
       laneCol.style.height = '300px';
 
       // Etiqueta del carril
@@ -61,9 +61,9 @@ export class ShipyardVisualizer {
     carril0Col.dataset.lane = 0;
 
     carril0Col.style.position = 'absolute';
-    carril0Col.style.left = `${8 * 75 + 10}px`; // 610px
+    carril0Col.style.left = '76.5%';
     carril0Col.style.top = '75px'; // Inicia abajo del transfer superior
-    carril0Col.style.width = '65px';
+    carril0Col.style.width = '8%';
     carril0Col.style.height = '235px';
 
     const label0 = document.createElement('div');
@@ -88,9 +88,9 @@ export class ShipyardVisualizer {
     slipwayCol.dataset.lane = 'VARADA';
 
     slipwayCol.style.position = 'absolute';
-    slipwayCol.style.left = '760px';
+    slipwayCol.style.left = '88%';
     slipwayCol.style.top = '75px'; // Inicia abajo del transfer superior
-    slipwayCol.style.width = '150px';
+    slipwayCol.style.width = '11.5%';
     slipwayCol.style.height = '235px';
 
     const slipwayTitle = document.createElement('div');
@@ -115,9 +115,9 @@ export class ShipyardVisualizer {
     transVaradaSlot.dataset.lane = 'TRANSFER_VARADA';
 
     transVaradaSlot.style.position = 'absolute';
-    transVaradaSlot.style.left = '685px'; // Centrado entre Carril 0 y Varada
+    transVaradaSlot.style.left = '83.5%'; // Centrado entre Carril 0 y Varada
     transVaradaSlot.style.top = '10px';   // En la parte superior
-    transVaradaSlot.style.width = '75px';
+    transVaradaSlot.style.width = '5.5%';
     transVaradaSlot.style.height = '60px';
 
     const varadaTransBoat = boats.find(b => b.status === 'transfer_varada');
@@ -149,9 +149,9 @@ export class ShipyardVisualizer {
       transPopaSlot.dataset.lane = lane;
 
       transPopaSlot.style.position = 'absolute';
-      transPopaSlot.style.left = `${(8 - lane) * 75 + 10}px`;
+      transPopaSlot.style.left = `calc(${(8 - lane) * 9.5}% + 0.5%)`;
       transPopaSlot.style.top = '320px';
-      transPopaSlot.style.width = '65px';
+      transPopaSlot.style.width = '8%';
       transPopaSlot.style.height = '60px';
 
       const popaTransBoat = boats.find(b => b.status === 'transfer_popa' && b.lane === lane);
@@ -204,18 +204,18 @@ export class ShipyardVisualizer {
     // Vía de transferencia inferior (Popa de carriles)
     const popaTrack = document.createElement('div');
     popaTrack.className = 'transfer-track-bg';
-    popaTrack.style.left = '10px';
+    popaTrack.style.left = '0.5%';
     popaTrack.style.top = '320px';
-    popaTrack.style.width = '665px'; // Desde carril 8 hasta carril 0
+    popaTrack.style.width = '84%'; // Abarca del carril 8 al 0
     popaTrack.style.height = '60px';
     this.gridElement.appendChild(popaTrack);
 
     // Vía de transferencia superior (Desde Carril 0 hasta extremo de Varada)
     const varadaTrack = document.createElement('div');
     varadaTrack.className = 'transfer-track-bg';
-    varadaTrack.style.left = '610px'; // Empieza en carril 0
+    varadaTrack.style.left = '76.5%'; // Empieza en carril 0
     varadaTrack.style.top = '10px';   // En la parte superior
-    varadaTrack.style.width = '300px'; // Se extiende cruzando Carril 0 y Varada
+    varadaTrack.style.width = '23%';   // Abarca cruzando Carril 0 y Varada
     varadaTrack.style.height = '60px';
     this.gridElement.appendChild(varadaTrack);
   }

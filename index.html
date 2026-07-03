@@ -79,25 +79,6 @@
       <!-- COLUMNA IZQUIERDA: VISUALIZADOR + GANTT -->
       <div class="left-panel">
         
-        <!-- Bahía de Espera Card (Fuera del visor físico) -->
-        <div class="card-container">
-          <div class="card-header">
-            <h2>
-              <i data-lucide="waves"></i>
-              Bahía de Espera (Embarcaciones en Mar)
-            </h2>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">
-              <i data-lucide="info" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i>
-              Arrastre un barco de esta bahía hacia la Cuna de Varada para iniciar el ingreso al astillero.
-            </div>
-          </div>
-          <div class="sea-bay-outside" id="sea-bay-drop">
-            <div class="sea-boats-list" id="sea-boats">
-              <!-- Se inyecta dinámicamente desde visualizer.js -->
-            </div>
-          </div>
-        </div>
-
         <!-- Shipyard Visualizer Card -->
         <div class="card-container">
           <div class="card-header">
@@ -117,6 +98,25 @@
               <div class="shipyard-grid" id="shipyard-grid">
                 <!-- Se inyecta dinámicamente desde visualizer.js -->
               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bahía de Espera Card (Fuera del visor físico) -->
+        <div class="card-container">
+          <div class="card-header">
+            <h2>
+              <i data-lucide="waves"></i>
+              Bahía de Espera (Embarcaciones en Mar)
+            </h2>
+            <div style="font-size: 0.8rem; color: var(--text-muted);">
+              <i data-lucide="info" style="width:14px; height:14px; vertical-align:middle; margin-right:4px;"></i>
+              Arrastre un barco de esta bahía hacia la Cuna de Varada para iniciar el ingreso al astillero.
+            </div>
+          </div>
+          <div class="sea-bay-outside" id="sea-bay-drop">
+            <div class="sea-boats-list" id="sea-boats">
+              <!-- Se inyecta dinámicamente desde visualizer.js -->
             </div>
           </div>
         </div>

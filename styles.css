@@ -340,8 +340,7 @@ header {
 .shipyard-grid {
   position: relative;
   height: 410px;
-  width: 920px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 /* Zona del Mar (Parte Inferior/Bahía) */
