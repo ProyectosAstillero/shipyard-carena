@@ -1,4 +1,4 @@
-// Módulo de Visualización Interactiva del Astillero (visualizer.js)
+// Módulo de Visualización Interactiva del Astillero (visualizer.js) - Versión Dos Transfers
 
 export class ShipyardVisualizer {
   constructor(stateInstance, onBoatSelected, onBoatMoved, showToast) {
@@ -19,21 +19,30 @@ export class ShipyardVisualizer {
     this.clearGrid();
     const boats = this.state.getBoats().filter(b => b.status !== 'libre');
 
-    // 1. Crear las columnas de los Carriles (0 al 8)
-    for (let lane = 8; lane >= 0; lane--) {
-      const isTransfer = (lane === 0);
+    // DIBUJAR VÍAS DE TRABAJO (FONDO ESTÁTICO)
+    this.drawBackgroundTracks();
+
+    // 1. Crear las columnas de los Carriles de Trabajo (1 al 8)
+    for (let lane = 8; lane >= 1; lane--) {
       const laneCol = document.createElement('div');
-      laneCol.className = `lane-column ${isTransfer ? 'lane-transfer' : ''}`;
+      laneCol.className = 'lane-column';
       laneCol.dataset.status = 'carril';
       laneCol.dataset.lane = lane;
+
+      // Ubicación absoluta
+      laneCol.style.position = 'absolute';
+      laneCol.style.left = `${(8 - lane) * 75 + 10}px`;
+      laneCol.style.top = '10px';
+      laneCol.style.width = '65px';
+      laneCol.style.height = '200px';
 
       // Etiqueta del carril
       const label = document.createElement('div');
       label.className = 'lane-label';
-      label.textContent = lane === 0 ? 'Carril 0 (Transfer)' : `Carril ${lane}`;
+      label.textContent = `C${lane}`;
       laneCol.appendChild(label);
 
-      // Buscar barco en este carril
+      // Buscar barco en este carril de trabajo
       const boat = boats.find(b => b.status === 'carril' && b.lane === lane);
       if (boat) {
         laneCol.classList.add('occupied');
@@ -45,18 +54,51 @@ export class ShipyardVisualizer {
       this.gridElement.appendChild(laneCol);
     }
 
-    // 2. Crear la columna de Varada (Slipway)
+    // 2. Crear el Carril 0 vertical (De transferencia vertical)
+    const carril0Col = document.createElement('div');
+    carril0Col.className = 'lane-column lane-transfer';
+    carril0Col.dataset.status = 'carril_0';
+    carril0Col.dataset.lane = 0;
+
+    carril0Col.style.position = 'absolute';
+    carril0Col.style.left = `${8 * 75 + 10}px`; // 610px
+    carril0Col.style.top = '10px';
+    carril0Col.style.width = '65px';
+    carril0Col.style.height = '200px';
+
+    const label0 = document.createElement('div');
+    label0.className = 'lane-label';
+    label0.textContent = 'C0';
+    carril0Col.appendChild(label0);
+
+    const carril0Boat = boats.find(b => b.status === 'carril_0');
+    if (carril0Boat) {
+      carril0Col.classList.add('occupied');
+      const boatEl = this.createBoatElement(carril0Boat);
+      carril0Col.appendChild(boatEl);
+    }
+
+    this.setupDropTarget(carril0Col);
+    this.gridElement.appendChild(carril0Col);
+
+    // 3. Crear la Rampa de Varada (Slipway / Cuna de Varada)
     const slipwayCol = document.createElement('div');
     slipwayCol.className = 'slipway-column';
-    slipwayCol.dataset.status = 'varada';
+    slipwayCol.dataset.status = 'cuna_varada';
     slipwayCol.dataset.lane = 'VARADA';
+
+    slipwayCol.style.position = 'absolute';
+    slipwayCol.style.left = '760px';
+    slipwayCol.style.top = '10px';
+    slipwayCol.style.width = '150px';
+    slipwayCol.style.height = '200px';
 
     const slipwayTitle = document.createElement('div');
     slipwayTitle.className = 'slipway-title';
     slipwayTitle.textContent = 'VARADA';
     slipwayCol.appendChild(slipwayTitle);
 
-    const varadaBoat = boats.find(b => b.status === 'varada');
+    const varadaBoat = boats.find(b => b.status === 'cuna_varada');
     if (varadaBoat) {
       slipwayCol.classList.add('occupied');
       const boatEl = this.createBoatElement(varadaBoat);
@@ -66,7 +108,75 @@ export class ShipyardVisualizer {
     this.setupDropTarget(slipwayCol);
     this.gridElement.appendChild(slipwayCol);
 
-    // 3. Crear los barcos en la cola de espera (Mar)
+    // 4. Crear el carro de Transferencia de Varada (Varada -> Carril 0)
+    const transVaradaSlot = document.createElement('div');
+    transVaradaSlot.className = 'transfer-varada-slot';
+    transVaradaSlot.dataset.status = 'transfer_varada';
+    transVaradaSlot.dataset.lane = 'TRANSFER_VARADA';
+
+    transVaradaSlot.style.position = 'absolute';
+    transVaradaSlot.style.left = '675px';
+    transVaradaSlot.style.top = '80px';
+    transVaradaSlot.style.width = '85px';
+    transVaradaSlot.style.height = '60px';
+
+    const varadaTransBoat = boats.find(b => b.status === 'transfer_varada');
+    if (varadaTransBoat) {
+      // Dibujar la base del carro naranja metálico
+      const carriage = document.createElement('div');
+      carriage.className = 'transfer-carriage';
+      transVaradaSlot.appendChild(carriage);
+
+      // Dibujar barco encima del carro
+      const boatEl = this.createBoatElement(varadaTransBoat);
+      transVaradaSlot.appendChild(boatEl);
+    } else {
+      // Si está vacío, dibujamos una pequeña sombra del carro naranja semi-transparente de guía
+      const carriageShadow = document.createElement('div');
+      carriageShadow.className = 'transfer-carriage';
+      carriageShadow.style.opacity = '0.15';
+      transVaradaSlot.appendChild(carriageShadow);
+    }
+
+    this.setupDropTarget(transVaradaSlot);
+    this.gridElement.appendChild(transVaradaSlot);
+
+    // 5. Crear los slots del Transfer de Popa (Horizontal inferior, 9 slots del 0 al 8)
+    for (let lane = 8; lane >= 0; lane--) {
+      const transPopaSlot = document.createElement('div');
+      transPopaSlot.className = 'transfer-popa-slot';
+      transPopaSlot.dataset.status = 'transfer_popa';
+      transPopaSlot.dataset.lane = lane;
+
+      transPopaSlot.style.position = 'absolute';
+      transPopaSlot.style.left = `${(8 - lane) * 75 + 10}px`;
+      transPopaSlot.style.top = '220px';
+      transPopaSlot.style.width = '65px';
+      transPopaSlot.style.height = '60px';
+
+      const popaTransBoat = boats.find(b => b.status === 'transfer_popa' && b.lane === lane);
+      if (popaTransBoat) {
+        // Dibujar el carro de transferencia naranja metálico
+        const carriage = document.createElement('div');
+        carriage.className = 'transfer-carriage';
+        transPopaSlot.appendChild(carriage);
+
+        // Dibujar barco encima
+        const boatEl = this.createBoatElement(popaTransBoat);
+        transPopaSlot.appendChild(boatEl);
+      } else {
+        // Mostrar sombra guía
+        const carriageShadow = document.createElement('div');
+        carriageShadow.className = 'transfer-carriage';
+        carriageShadow.style.opacity = '0.12';
+        transPopaSlot.appendChild(carriageShadow);
+      }
+
+      this.setupDropTarget(transPopaSlot);
+      this.gridElement.appendChild(transPopaSlot);
+    }
+
+    // 6. Crear los barcos en la cola de espera (Mar)
     this.seaElement.innerHTML = '';
     const seaBoats = boats.filter(b => b.status === 'espera');
     
@@ -89,6 +199,27 @@ export class ShipyardVisualizer {
     this.setupSeaDropTarget();
   }
 
+  // Dibujar vías de ferrocarril de fondo
+  drawBackgroundTracks() {
+    // Vía de transferencia inferior (Popa de carriles)
+    const popaTrack = document.createElement('div');
+    popaTrack.className = 'transfer-track-bg';
+    popaTrack.style.left = '10px';
+    popaTrack.style.top = '220px';
+    popaTrack.style.width = '665px'; // Desde carril 8 hasta carril 0
+    popaTrack.style.height = '60px';
+    this.gridElement.appendChild(popaTrack);
+
+    // Vía de transferencia lateral superior (Varada a Carril 0)
+    const varadaTrack = document.createElement('div');
+    varadaTrack.className = 'transfer-track-bg';
+    varadaTrack.style.left = '675px';
+    varadaTrack.style.top = '80px';
+    varadaTrack.style.width = '85px'; // Distancia intermedia
+    varadaTrack.style.height = '60px';
+    this.gridElement.appendChild(varadaTrack);
+  }
+
   // Limpiar el grid del astillero antes de renderizar
   clearGrid() {
     this.gridElement.innerHTML = '';
@@ -96,7 +227,6 @@ export class ShipyardVisualizer {
 
   // Generar el SVG del barco según su tipo
   getBoatSvg(type, color) {
-    // Definimos diferentes gráficos vectoriales (SVG) por tipo de barco
     const safeColor = color || '#3b82f6';
     
     if (type === 'Pesquero') {
@@ -107,14 +237,12 @@ export class ShipyardVisualizer {
           <path d="M20,25 L60,25 L60,135 C60,150 40,165 40,165 C40,165 20,150 20,135 Z" fill="#131a2c" opacity="0.8"/>
           <!-- Superestructura (Cabina) -->
           <rect x="25" y="45" width="30" height="40" rx="3" fill="#ffffff" />
-          <!-- Ventanas de la cabina -->
           <rect x="30" y="50" width="8" height="10" fill="#0ea5e9" rx="1"/>
           <rect x="42" y="50" width="8" height="10" fill="#0ea5e9" rx="1"/>
           <rect x="30" y="65" width="20" height="12" fill="#0ea5e9" rx="1"/>
-          <!-- Pluma de pesca / Grúa de popa -->
+          <!-- Pluma de pesca -->
           <line x1="40" y1="85" x2="40" y2="125" stroke="#94a3b8" stroke-width="3" />
           <circle cx="40" cy="125" r="3" fill="#f59e0b" />
-          <!-- Redes de Pesca en cubierta -->
           <path d="M25,135 Q40,125 55,135 Q40,145 25,135 Z" fill="rgba(245,158,11,0.3)" stroke="#f59e0b" stroke-width="1" stroke-dasharray="2,2" />
           <!-- Chimenea -->
           <rect x="35" y="32" width="10" height="14" fill="#ef4444" />
@@ -139,47 +267,41 @@ export class ShipyardVisualizer {
           <!-- Cabina en Popa -->
           <rect x="22" y="130" width="36" height="30" rx="2" fill="#ffffff" />
           <rect x="28" y="135" width="24" height="8" fill="#0ea5e9"/>
-          <!-- Grúa portuaria de servicio -->
           <line x1="40" y1="20" x2="40" y2="120" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
         </svg>
       `;
     } else if (type === 'Remolcador') {
       return `
         <svg viewBox="0 0 85 160" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <!-- Casco Ancho y Fuerte -->
+          <!-- Casco Ancho -->
           <path d="M10,25 L75,25 L75,120 C75,145 42.5,160 42.5,160 C42.5,160 10,145 10,120 Z" fill="${safeColor}" stroke="rgba(255,255,255,0.2)" stroke-width="2.5"/>
           <path d="M16,30 L69,30 L69,115 C69,135 42.5,148 42.5,148 C42.5,148 16,135 16,115 Z" fill="#131a2c" opacity="0.8"/>
-          <!-- Defensas de Goma alrededor del casco -->
+          <!-- Defensas de Goma -->
           <path d="M8,25 Q42.5,10 77,25" fill="none" stroke="#000" stroke-width="4" stroke-linecap="round"/>
           <path d="M9,24 L9,120 C9,146 42.5,162 42.5,162 C42.5,162 76,146 76,120 L76,24" fill="none" stroke="#000" stroke-width="2" stroke-dasharray="6,4"/>
-          <!-- Cabina Central Voluminosa -->
+          <!-- Cabina Central -->
           <rect x="22" y="50" width="41" height="45" rx="5" fill="#f8fafc"/>
           <rect x="27" y="55" width="31" height="15" fill="#0ea5e9" rx="2"/>
           <rect x="27" y="75" width="8" height="12" fill="#0ea5e9" rx="1"/>
           <rect x="50" y="75" width="8" height="12" fill="#0ea5e9" rx="1"/>
-          <!-- Bitas de Remolque en Popa -->
+          <!-- Bitas -->
           <rect x="36" y="110" width="13" height="10" fill="#475569" rx="1"/>
           <line x1="30" y1="115" x2="55" y2="115" stroke="#1e293b" stroke-width="4" stroke-linecap="round"/>
-          <!-- Chimeneas Dobles -->
           <rect x="28" y="38" width="8" height="12" fill="#1e293b"/>
           <rect x="49" y="38" width="8" height="12" fill="#1e293b"/>
         </svg>
       `;
     } else {
-      // Yate o Diseño Genérico Sleek
       return `
         <svg viewBox="0 0 80 180" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <!-- Casco muy estilizado con punta pronunciada -->
+          <!-- Casco estilizado -->
           <path d="M20,10 L60,10 L60,130 C60,160 40,180 40,180 C40,180 20,160 20,130 Z" fill="${safeColor}" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-          <!-- Cubierta de teca de madera -->
           <path d="M24,14 L56,14 L56,125 C56,145 40,165 40,165 C40,165 24,145 24,125 Z" fill="#b45309" opacity="0.9"/>
-          <!-- Cabina de lujo blanca aerodinámica -->
+          <!-- Cabina de lujo -->
           <path d="M28,40 Q40,20 52,40 L50,90 Q40,95 30,90 Z" fill="#ffffff" stroke="rgba(0,0,0,0.1)"/>
           <path d="M32,45 Q40,32 48,45 L47,60 Q40,65 33,60 Z" fill="#0f172a"/>
-          <!-- Jacuzzi/Piscina en cubierta popa -->
           <circle cx="40" cy="115" r="10" fill="#38bdf8" stroke="#fff" stroke-width="1"/>
           <circle cx="40" cy="115" r="8" fill="#0ea5e9" opacity="0.6"/>
-          <!-- Solárium / Asientos -->
           <rect x="30" y="135" width="20" height="8" fill="#e2e8f0" rx="2" />
         </svg>
       `;
@@ -219,7 +341,7 @@ export class ShipyardVisualizer {
       const type = document.createElement('div');
       type.className = 'boat-vessel-type-badge';
       type.textContent = boat.type;
-      type.style.background = `${boat.color}40`; // Color semi-transparente
+      type.style.background = `${boat.color}40`;
       type.style.color = boat.color;
       detailsDiv.appendChild(type);
 
@@ -237,7 +359,6 @@ export class ShipyardVisualizer {
 
       boatDiv.appendChild(detailsDiv);
     } else {
-      // En la cola de espera solo mostramos el nombre al pasar el mouse o texto corto
       const nameSpan = document.createElement('span');
       nameSpan.className = 'boat-vessel-name';
       nameSpan.textContent = boat.name;
@@ -255,9 +376,8 @@ export class ShipyardVisualizer {
 
     // Evento de Selección (Click)
     boatDiv.addEventListener('click', (e) => {
-      e.stopPropagation(); // Evitar clicks en el contenedor
+      e.stopPropagation();
       
-      // Remover selección previa
       document.querySelectorAll('.boat-vessel').forEach(el => el.style.border = '1px solid rgba(255,255,255,0.15)');
       boatDiv.style.border = `2px solid ${boat.color}`;
       boatDiv.style.boxShadow = `0 0 15px ${boat.color}`;
@@ -274,20 +394,15 @@ export class ShipyardVisualizer {
       this.draggedBoatId = boatElement.id;
       boatElement.classList.add('dragging');
       
-      // Guardar información del barco en el portapapeles
       e.dataTransfer.setData('text/plain', boatElement.id);
       e.dataTransfer.effectAllowed = 'move';
 
-      // Añadir clase global para mostrar objetivos válidos
-      const boats = this.state.getBoats();
-      const currentBoat = boats.find(b => b.id === this.draggedBoatId);
-      
-      // Resaltar posibles destinos
-      document.querySelectorAll('.lane-column, .slipway-column, #sea-bay-drop').forEach(target => {
+      // Resaltar posibles destinos válidos
+      document.querySelectorAll('.lane-column, .slipway-column, .transfer-popa-slot, .transfer-varada-slot, #sea-bay-drop').forEach(target => {
         let status = target.dataset.status;
         let lane = target.dataset.lane;
 
-        if (status === 'carril') {
+        if (lane !== 'VARADA' && lane !== 'TRANSFER_VARADA' && lane !== null && lane !== undefined) {
           lane = parseInt(lane, 10);
         }
 
@@ -304,8 +419,7 @@ export class ShipyardVisualizer {
     boatElement.addEventListener('dragend', () => {
       boatElement.classList.remove('dragging');
       
-      // Limpiar clases globales y opacidades
-      document.querySelectorAll('.lane-column, .slipway-column, #sea-bay-drop').forEach(target => {
+      document.querySelectorAll('.lane-column, .slipway-column, .transfer-popa-slot, .transfer-varada-slot, #sea-bay-drop').forEach(target => {
         target.style.outline = 'none';
         target.style.opacity = '1';
         target.classList.remove('drag-over', 'drag-over-invalid');
@@ -314,16 +428,16 @@ export class ShipyardVisualizer {
     });
   }
 
-  // Registrar evento de caída en destinos (carriles/varada)
+  // Registrar evento de caída en destinos
   setupDropTarget(targetElement) {
     targetElement.addEventListener('dragover', (e) => {
-      e.preventDefault(); // Necesario para permitir soltar
+      e.preventDefault();
       
       if (!this.draggedBoatId) return;
 
       const status = targetElement.dataset.status;
       let lane = targetElement.dataset.lane;
-      if (status === 'carril') {
+      if (lane !== 'VARADA' && lane !== 'TRANSFER_VARADA' && lane !== null && lane !== undefined) {
         lane = parseInt(lane, 10);
       }
 
@@ -350,7 +464,7 @@ export class ShipyardVisualizer {
       const boatId = e.dataTransfer.getData('text/plain');
       const status = targetElement.dataset.status;
       let lane = targetElement.dataset.lane;
-      if (status === 'carril') {
+      if (lane !== 'VARADA' && lane !== 'TRANSFER_VARADA' && lane !== null && lane !== undefined) {
         lane = parseInt(lane, 10);
       }
 
@@ -364,7 +478,7 @@ export class ShipyardVisualizer {
     });
   }
 
-  // Configurar la zona del mar para poder botar barcos arrastrándolos
+  // Zona del mar para botar barcos
   setupSeaDropTarget() {
     const seaDropZone = document.getElementById('sea-bay-drop');
     if (!seaDropZone) return;

@@ -1,4 +1,4 @@
-// Módulo de Gestión de Estado del Astillero (state.js)
+// Módulo de Gestión de Estado del Astillero (state.js) - Versión Dos Transfers
 
 export class ShipyardState {
   constructor() {
@@ -43,7 +43,7 @@ export class ShipyardState {
         length: 42.5,
         beam: 9.2,
         weight: 380,
-        status: "carril",
+        status: "carril", // En carril de trabajo
         lane: 8,
         entryDate: "2026-06-15",
         departureDate: "2026-07-10",
@@ -60,7 +60,7 @@ export class ShipyardState {
         length: 55.0,
         beam: 11.5,
         weight: 650,
-        status: "carril",
+        status: "carril", // En carril de trabajo
         lane: 4,
         entryDate: "2026-06-20",
         departureDate: "2026-07-15",
@@ -77,7 +77,7 @@ export class ShipyardState {
         length: 38.2,
         beam: 8.5,
         weight: 290,
-        status: "carril",
+        status: "carril", // En carril de trabajo
         lane: 3,
         entryDate: "2026-06-28",
         departureDate: "2026-07-08",
@@ -94,7 +94,7 @@ export class ShipyardState {
         length: 28.0,
         beam: 7.8,
         weight: 180,
-        status: "carril",
+        status: "carril", // En carril de trabajo
         lane: 1,
         entryDate: "2026-07-01",
         departureDate: "2026-07-07",
@@ -141,13 +141,11 @@ export class ShipyardState {
 
     const mockHistory = [
       { timestamp: "2026-06-15 08:30:00", boatName: "COPEINCA II", action: "INGRESO COLA", details: "Ingreso a la lista de espera." },
-      { timestamp: "2026-06-15 10:15:00", boatName: "COPEINCA II", action: "VARADA", details: "Posicionado en carro de varada (VARADA)." },
-      { timestamp: "2026-06-15 11:30:00", boatName: "COPEINCA II", action: "TRASLADO", details: "Trasladado a Carril 0 (Transferencia)." },
-      { timestamp: "2026-06-15 13:00:00", boatName: "COPEINCA II", action: "TRASLADO", details: "Posicionado final en Carril 8 para carena." },
-      { timestamp: "2026-06-20 09:00:00", boatName: "HUMBOLDT", action: "VARADA", details: "Posicionado en carro de varada (VARADA)." },
-      { timestamp: "2026-06-20 11:45:00", boatName: "HUMBOLDT", action: "TRASLADO", details: "Trasladado a Carril 4 pasando por Carril 0." },
-      { timestamp: "2026-06-28 14:20:00", boatName: "DON TITO", action: "TRASLADO", details: "Varado y posicionado en Carril 3." },
-      { timestamp: "2026-07-01 07:10:00", boatName: "KRAKEN I", action: "TRASLADO", details: "Varado y posicionado en Carril 1." }
+      { timestamp: "2026-06-15 10:15:00", boatName: "COPEINCA II", action: "VARADA", details: "Posicionado en cuna de varada (Slipway)." },
+      { timestamp: "2026-06-15 11:00:00", boatName: "COPEINCA II", action: "TRASLADO", details: "Transferido lateralmente al carro de Varada (Naranja)." },
+      { timestamp: "2026-06-15 11:30:00", boatName: "COPEINCA II", action: "TRASLADO", details: "Ingresó al Carril 0." },
+      { timestamp: "2026-06-15 12:15:00", boatName: "COPEINCA II", action: "TRASLADO", details: "Bajó al Transfer de Popa (Posición 0)." },
+      { timestamp: "2026-06-15 13:00:00", boatName: "COPEINCA II", action: "TRASLADO", details: "Desplazado horizontalmente al Carril 8 e ingresado a carena." }
     ];
 
     this.state = {
@@ -168,12 +166,22 @@ export class ShipyardState {
     return this.state.boats.find(b => b.id === id);
   }
 
-  // Obtener el barco en un carril específico
+  // Obtener el barco en una posición específica
   getBoatInLane(lane) {
     if (lane === 'VARADA') {
-      return this.state.boats.find(b => b.status === 'varada');
+      return this.state.boats.find(b => b.status === 'cuna_varada');
+    }
+    if (lane === 'TRANSFER_VARADA') {
+      return this.state.boats.find(b => b.status === 'transfer_varada');
+    }
+    if (typeof lane === 'string' && lane.startsWith('TRANSFER_POPA_')) {
+      const pos = parseInt(lane.split('_')[2], 10);
+      return this.state.boats.find(b => b.status === 'transfer_popa' && b.lane === pos);
     }
     const laneNum = parseInt(lane, 10);
+    if (laneNum === 0) {
+      return this.state.boats.find(b => b.status === 'carril_0');
+    }
     return this.state.boats.find(b => b.status === 'carril' && b.lane === laneNum);
   }
 
@@ -243,11 +251,26 @@ export class ShipyardState {
       return { allowed: true };
     }
 
-    // Verificar si el carril de destino está ocupado
-    if (targetStatus === 'varada') {
+    // Verificar ocupación del destino
+    if (targetStatus === 'cuna_varada') {
       const occupied = this.getBoatInLane('VARADA');
       if (occupied && occupied.id !== boatId) {
-        return { allowed: false, message: `El carro de Varada (Slipway) ya está ocupado por ${occupied.name}.` };
+        return { allowed: false, message: `La Cuna de Varada ya está ocupada por ${occupied.name}.` };
+      }
+    } else if (targetStatus === 'transfer_varada') {
+      const occupied = this.getBoatInLane('TRANSFER_VARADA');
+      if (occupied && occupied.id !== boatId) {
+        return { allowed: false, message: `El Transfer de Varada (Ramp) ya está ocupado por ${occupied.name}.` };
+      }
+    } else if (targetStatus === 'carril_0') {
+      const occupied = this.getBoatInLane(0);
+      if (occupied && occupied.id !== boatId) {
+        return { allowed: false, message: `El Carril 0 de transferencia ya está ocupado por ${occupied.name}.` };
+      }
+    } else if (targetStatus === 'transfer_popa') {
+      const occupied = this.getBoatInLane(`TRANSFER_POPA_${targetLane}`);
+      if (occupied && occupied.id !== boatId) {
+        return { allowed: false, message: `El Transfer de Popa en posición ${targetLane} está ocupado por ${occupied.name}.` };
       }
     } else if (targetStatus === 'carril') {
       const occupied = this.getBoatInLane(targetLane);
@@ -256,41 +279,81 @@ export class ShipyardState {
       }
     }
 
-    // REGLA DE NEGOCIO: Ruta física de movimiento
-    // 1. Desde espera (mar) -> Solo puede ir a VARADA
+    // REGLAS FÍSICAS DE MANIOBRA (2 TRANSFERS)
+    
+    // 1. Desde Espera (Mar) -> Solo puede entrar a Cuna de Varada (Slipway)
     if (currentStatus === 'espera') {
-      if (targetStatus !== 'varada') {
-        return { allowed: false, message: "Un barco en el mar debe ingresar primero al carro de Varada (cradle)." };
+      if (targetStatus !== 'cuna_varada') {
+        return { allowed: false, message: "Los barcos en la bahía deben entrar primero a la Cuna de Varada." };
       }
     }
 
-    // 2. Desde VARADA (slipway) -> Solo puede ir a Carril 0 (carro de transferencia) o volver al mar (lanzar/borrar)
-    if (currentStatus === 'varada') {
-      if (targetStatus === 'espera') {
-        return { allowed: true }; // Cancelar entrada/volver al agua
-      }
-      if (targetStatus === 'carril' && targetLane !== 0) {
-        return { allowed: false, message: "Desde la Varada, el barco debe moverse al Carril 0 (Carro de Transferencia) antes de ir a los carriles de mantenimiento (1-8)." };
+    // 2. Desde Cuna de Varada -> Puede volver a Espera (Botadura) o pasar al Transfer de Varada (Naranja)
+    if (currentStatus === 'cuna_varada') {
+      if (targetStatus !== 'espera' && targetStatus !== 'transfer_varada') {
+        return { allowed: false, message: "Desde la cuna de varada, el barco debe moverse al Transfer de Varada (Carro Horizontal de Varada)." };
       }
     }
 
-    // 3. Desde Carril 0 (Transferencia) -> Puede ir a cualquier Carril (1 a 8), o volver a VARADA
-    if (currentStatus === 'carril' && currentLane === 0) {
-      if (targetStatus === 'espera') {
-        return { allowed: false, message: "Para botar el barco, debe pasarlo primero al carro de Varada." };
+    // 3. Desde Transfer de Varada -> Puede volver a Cuna de Varada o ingresar al Carril 0
+    if (currentStatus === 'transfer_varada') {
+      if (targetStatus !== 'cuna_varada' && targetStatus !== 'carril_0') {
+        return { allowed: false, message: "El Transfer de Varada solo conecta la cuna de varada con el Carril 0." };
       }
     }
 
-    // 4. Desde Carriles 1 a 8 -> Solo pueden retornar al Carril 0 (para transferencia)
-    if (currentStatus === 'carril' && currentLane > 0) {
+    // 4. Desde Carril 0 -> Puede subir al Transfer de Varada o bajar al Transfer de Popa (en posición 0)
+    if (currentStatus === 'carril_0') {
+      if (targetStatus === 'transfer_varada') {
+        return { allowed: true };
+      }
+      if (targetStatus === 'transfer_popa') {
+        if (targetLane !== 0) {
+          return { allowed: false, message: "Desde el Carril 0, el barco solo puede bajar al Transfer de Popa en la posición 0." };
+        }
+      } else {
+        return { allowed: false, message: "Maniobra inválida. Desde el Carril 0 debe ir al Transfer de Varada o al Transfer de Popa (Posición 0)." };
+      }
+    }
+
+    // 5. Desde Transfer de Popa (Posición X):
+    if (currentStatus === 'transfer_popa') {
+      // Si quiere ir al mar (espera) directo: denegado
       if (targetStatus === 'espera') {
-        return { allowed: false, message: "No se puede botar el barco directamente desde un carril de trabajo. Debe pasar por el Carril 0 (Transferencia) y luego a VARADA." };
+        return { allowed: false, message: "Debe pasar el barco por Carril 0, Transfer de Varada y Cuna de Varada para botarlo al mar." };
       }
-      if (targetStatus === 'varada') {
-        return { allowed: false, message: "Debe pasar primero por el Carril 0 (Transferencia) antes de llevarlo a VARADA." };
+
+      // Si está en la Posición 0: puede subir al Carril 0 (vertical) o moverse lateralmente a otra posición de Popa (1 a 8)
+      if (currentLane === 0) {
+        if (targetStatus === 'carril_0') {
+          return { allowed: true };
+        }
+        if (targetStatus === 'transfer_popa') {
+          // Movimiento lateral
+          return { allowed: true };
+        }
+        return { allowed: false, message: "Desde el Transfer de Popa en posición 0, debe subir al Carril 0 o desplazarse horizontalmente a otras posiciones de popa (1-8)." };
       }
-      if (targetStatus === 'carril' && targetLane !== 0) {
-        return { allowed: false, message: "No se puede mover un barco directamente entre carriles de trabajo (1-8). Debe pasar primero al Carril 0 (Carro de Transferencia)." };
+      
+      // Si está en Posición X (1 a 8): puede moverse lateralmente a otra posición de Popa, o subir al Carril de Trabajo X
+      if (currentLane > 0) {
+        if (targetStatus === 'transfer_popa') {
+          return { allowed: true }; // Desplazamiento lateral en la popa
+        }
+        if (targetStatus === 'carril') {
+          if (targetLane !== currentLane) {
+            return { allowed: false, message: `El Transfer de Popa está alineado con el Carril ${currentLane}. Para ir al Carril ${targetLane}, primero desplace el Transfer lateralmente.` };
+          }
+          return { allowed: true }; // Subir al carril
+        }
+        return { allowed: false, message: "Desde el Transfer de Popa alineado, debe subir al carril de trabajo correspondiente o desplazarse lateralmente." };
+      }
+    }
+
+    // 6. Desde Carriles de Trabajo (1 a 8) -> Solo pueden bajar al Transfer de Popa correspondiente
+    if (currentStatus === 'carril') {
+      if (targetStatus !== 'transfer_popa' || targetLane !== currentLane) {
+        return { allowed: false, message: `Para salir de carena del Carril ${currentLane}, debe descender el barco al Transfer de Popa en la posición ${currentLane}.` };
       }
     }
 
@@ -309,16 +372,27 @@ export class ShipyardState {
     const oldLane = boat.lane;
 
     boat.status = targetStatus;
+    
     if (targetStatus === 'espera') {
       boat.lane = null;
       boat.progress = 0; // Se reinicia el progreso al salir
       this.logHistory(boat.name, 'BOTADURA', 'El barco fue botado exitosamente de regreso al mar.');
-    } else if (targetStatus === 'varada') {
+    } else if (targetStatus === 'cuna_varada') {
       boat.lane = null;
-      this.logHistory(boat.name, 'VARADA', 'Barco subido al carro de Varada (cradle).');
+      this.logHistory(boat.name, 'VARADA', 'Barco posicionado en cuna de varada (Slipway).');
+    } else if (targetStatus === 'transfer_varada') {
+      boat.lane = null;
+      this.logHistory(boat.name, 'TRASLADO', 'Desplazado al Transfer de Varada (Carro Horizontal superior).');
+    } else if (targetStatus === 'carril_0') {
+      boat.lane = 0;
+      this.logHistory(boat.name, 'TRASLADO', 'Ingresado al carril vertical 0.');
+    } else if (targetStatus === 'transfer_popa') {
+      boat.lane = parseInt(targetLane, 10);
+      const logMsg = `Posicionado en el Transfer de Popa (Posición ${targetLane}).`;
+      this.logHistory(boat.name, 'TRASLADO', logMsg);
     } else if (targetStatus === 'carril') {
       boat.lane = parseInt(targetLane, 10);
-      const logMsg = `Trasladado del carril ${oldStatus === 'varada' ? 'VARADA' : oldLane} al Carril ${targetLane}.`;
+      const logMsg = `Ingresado a carena en el Carril ${targetLane}.`;
       this.logHistory(boat.name, 'TRASLADO', logMsg);
     }
 
@@ -331,9 +405,9 @@ export class ShipyardState {
     const boat = this.getBoatById(boatId);
     if (!boat) return { success: false, message: "El barco no existe." };
 
-    // Debe estar en VARADA para ser lanzado al agua
-    if (boat.status !== 'varada') {
-      return { success: false, message: "El barco debe estar posicionado en el carro de Varada (VARADA) para realizar la botadura al mar." };
+    // Debe estar en cuna_varada para ser lanzado al agua
+    if (boat.status !== 'cuna_varada') {
+      return { success: false, message: "El barco debe estar posicionado en la Cuna de Varada (Slipway) para realizar la botadura al mar." };
     }
 
     // Cambiar estado a 'libre' (eliminado del astillero activo pero queda registrado en historial)
@@ -342,8 +416,6 @@ export class ShipyardState {
     boat.progress = 100;
     this.logHistory(boat.name, 'BOTADURA', 'Maniobra de botadura completada. Barco entregado a armador.');
 
-    // Eliminar de los activos (o mantenerlos marcados como libre)
-    // Para simplificar, lo mantendremos con estatus 'libre' para reportes, pero ya no ocupa carril.
     this.saveState();
     return { success: true, boat };
   }
@@ -377,7 +449,6 @@ export class ShipyardState {
       details
     });
 
-    // Limitar historial a 100 elementos
     if (this.state.history.length > 100) {
       this.state.history.pop();
     }
@@ -392,8 +463,11 @@ export class ShipyardState {
   getStats() {
     const activeBoats = this.state.boats.filter(b => b.status !== 'libre');
     const waitingCount = activeBoats.filter(b => b.status === 'espera').length;
-    const occupiedLanes = activeBoats.filter(b => b.status === 'carril' || b.status === 'varada').length;
-    const totalCapacity = 10; // Carriles 0 al 8 (9) + Varada (1) = 10 slots posibles en astillero
+    
+    // Contar slots físicos del astillero activos:
+    // Cuna de varada (1) + Transfer de varada (1) + Carril 0 (1) + Transfer de Popa (1 de 9 slots) + Carriles 1-8 (8)
+    const occupiedLanes = activeBoats.filter(b => b.status !== 'espera').length;
+    const totalCapacity = 12; // Cuna (1) + Transfer Varada (1) + Carril 0 (1) + Transfer Popa (1) + Carriles 1-8 (8) = 12 slots max activos
 
     return {
       totalActive: activeBoats.length,

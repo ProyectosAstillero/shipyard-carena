@@ -365,12 +365,45 @@ class ShipyardApp {
     }
 
     const boat = this.selectedBoat;
-    const isVarada = boat.status === 'varada';
-    const isEspera = boat.status === 'espera';
+    const isCunaVarada = boat.status === 'cuna_varada';
 
     let locationText = 'Bahía de Espera (Mar)';
-    if (boat.status === 'varada') locationText = 'Carro de Varada (Slipway)';
-    if (boat.status === 'carril') locationText = `Carril ${boat.lane}`;
+    if (boat.status === 'cuna_varada') locationText = 'Cuna de Varada (Slipway)';
+    if (boat.status === 'transfer_varada') locationText = 'Transfer de Varada (Carro Superior)';
+    if (boat.status === 'carril_0') locationText = 'Carril 0 (Transferencia Vertical)';
+    if (boat.status === 'transfer_popa') locationText = `Transfer de Popa (Posición ${boat.lane})`;
+    if (boat.status === 'carril') locationText = `Carril de Carena ${boat.lane}`;
+
+    // Construir la lista de traslados manuales permitidos físicamente
+    const moves = [
+      { status: 'espera', lane: null, label: 'Bahía de Espera (Mar)' },
+      { status: 'cuna_varada', lane: 'VARADA', label: 'Cuna de Varada (Slipway)' },
+      { status: 'transfer_varada', lane: 'TRANSFER_VARADA', label: 'Transfer de Varada (Naranja)' },
+      { status: 'carril_0', lane: 0, label: 'Carril 0 (Vertical)' },
+      ...[0, 1, 2, 3, 4, 5, 6, 7, 8].map(l => ({ status: 'transfer_popa', lane: l, label: `Transfer Popa (Pos ${l})` })),
+      ...[1, 2, 3, 4, 5, 6, 7, 8].map(l => ({ status: 'carril', lane: l, label: `Carril de Carena ${l}` }))
+    ];
+
+    const optionsHtml = moves.map(m => {
+      const isCurrent = (boat.status === m.status && boat.lane === m.lane);
+      const validation = this.state.validateMovement(boat.id, m.status, m.lane);
+      
+      let disabledAttr = '';
+      let styleAttr = '';
+      let labelSuffix = '';
+      
+      if (isCurrent) {
+        disabledAttr = 'disabled';
+        labelSuffix = ' (Actual)';
+      } else if (!validation.allowed) {
+        disabledAttr = 'disabled';
+        styleAttr = 'style="color: #64748b;"'; // Gris apagado
+        labelSuffix = ` (Bloqueado: ${validation.message})`;
+      }
+      
+      const optionValue = `${m.status}|${m.lane !== null ? m.lane : ''}`;
+      return `<option value="${optionValue}" ${disabledAttr} ${styleAttr}>${m.label}${labelSuffix}</option>`;
+    }).join('');
 
     container.innerHTML = `
       <div class="boat-details-panel" style="--boat-color: ${boat.color}">
@@ -442,19 +475,13 @@ class ShipyardApp {
             <div style="display:flex; gap:6px; align-items:center;">
               <select id="select-manual-move" class="form-control" style="font-size:0.8rem; height:34px; padding:4px 8px;">
                 <option value="" disabled selected>Trasladar a...</option>
-                <option value="espera" ${isEspera ? 'disabled' : ''}>Bahía de Espera (Mar)</option>
-                <option value="varada" ${isVarada ? 'disabled' : ''}>Carro de Varada (Slipway)</option>
-                ${[0, 1, 2, 3, 4, 5, 6, 7, 8].map(l => {
-                  const occupied = this.state.getBoatInLane(l);
-                  const isCurrent = (boat.status === 'carril' && boat.lane === l);
-                  return `<option value="carril_${l}" ${isCurrent ? 'disabled' : ''} ${occupied && !isCurrent ? 'disabled style="color:red;"' : ''}>Carril ${l} ${occupied && !isCurrent ? '(Ocupado)' : ''}</option>`;
-                }).join('')}
+                ${optionsHtml}
               </select>
               <button id="btn-manual-move" class="btn-action success" style="width:auto; height:34px; font-size:0.8rem; padding:0 12px;">Mover</button>
             </div>
 
             <!-- Botones de Acción directos -->
-            ${isVarada ? `
+            ${isCunaVarada ? `
               <button id="btn-launch-boat" class="btn-action success">
                 <i data-lucide="ship"></i>
                 Realizar Botadura al Mar
@@ -498,16 +525,10 @@ class ShipyardApp {
           return;
         }
 
-        let targetStatus, targetLane;
-        if (value === 'espera') {
-          targetStatus = 'espera';
-          targetLane = null;
-        } else if (value === 'varada') {
-          targetStatus = 'varada';
-          targetLane = 'VARADA';
-        } else if (value.startsWith('carril_')) {
-          targetStatus = 'carril';
-          targetLane = parseInt(value.split('_')[1], 10);
+        const [targetStatus, rawLane] = value.split('|');
+        let targetLane = rawLane;
+        if (rawLane !== '' && rawLane !== 'VARADA' && rawLane !== 'TRANSFER_VARADA') {
+          targetLane = parseInt(rawLane, 10);
         }
 
         const result = this.state.moveBoat(boat.id, targetStatus, targetLane);

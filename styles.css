@@ -330,29 +330,28 @@ header {
   background: linear-gradient(180deg, #131a2c 0%, #0d1220 100%);
   border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-md);
-  padding: 2rem 1.5rem;
+  padding: 1.5rem;
   position: relative;
   box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 
-/* Distribución del Astillero */
+/* Distribución del Astillero con Posicionamiento Absoluto */
 .shipyard-grid {
-  display: grid;
-  grid-template-columns: repeat(9, 1fr) 180px; /* 9 carriles (0-8) + Varada (180px) */
-  gap: 14px;
-  height: 380px;
   position: relative;
+  height: 310px;
+  width: 920px;
+  margin: 0 auto;
 }
 
 /* Zona del Mar (Parte Inferior/Bahía) */
 .sea-bay {
-  grid-column: 1 / -1;
+  width: 920px;
   height: 90px;
   background: linear-gradient(0deg, rgba(30, 64, 175, 0.35) 0%, rgba(30, 58, 138, 0.1) 100%);
   border: 1px solid rgba(59, 130, 246, 0.2);
-  border-top: none;
-  border-radius: 0 0 var(--radius-md) var(--radius-md);
-  margin-top: 15px;
+  border-radius: var(--radius-md);
+  margin: 15px auto 0 auto;
   padding: 10px;
   display: flex;
   flex-direction: column;
@@ -378,48 +377,38 @@ header {
   padding-bottom: 4px;
 }
 
-/* Carriles Individuales */
+/* Carriles Individuales (Absolutos) */
 .lane-column {
   background: rgba(255, 255, 255, 0.02);
-  border-left: 2px dashed rgba(255, 255, 255, 0.1);
-  border-right: 2px dashed rgba(255, 255, 255, 0.1);
+  border-left: 2px dashed rgba(255, 255, 255, 0.08);
+  border-right: 2px dashed rgba(255, 255, 255, 0.08);
   border-top: 3px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative;
+  position: absolute;
   padding: 10px 4px;
   transition: var(--transition-normal);
-}
-
-.lane-column::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.05);
 }
 
 /* Carril 0 de Transferencia (Fondo distintivo) */
 .lane-column.lane-transfer {
   background: rgba(59, 130, 246, 0.03);
-  border-left: 2px solid rgba(59, 130, 246, 0.2);
-  border-right: 2px solid rgba(59, 130, 246, 0.2);
+  border-left: 2px solid rgba(59, 130, 246, 0.15);
+  border-right: 2px solid rgba(59, 130, 246, 0.15);
   border-top-color: var(--color-primary);
 }
 
 .lane-column.lane-transfer::before {
-  content: 'TRANSFER';
+  content: 'CARRIL 0';
   position: absolute;
-  top: 40%;
+  top: 45%;
   transform: rotate(-90deg);
   font-size: 0.65rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 2px;
-  color: rgba(59, 130, 246, 0.15);
+  color: rgba(59, 130, 246, 0.1);
   pointer-events: none;
   white-space: nowrap;
 }
@@ -433,34 +422,35 @@ header {
   color: var(--text-muted);
 }
 
-/* Rampa de Varada (Slipway) */
+/* Rampa de Varada (Slipway / Cradle) */
 .slipway-column {
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.02) 0%, rgba(245, 158, 11, 0.08) 100%);
-  border: 2px solid rgba(245, 158, 11, 0.2);
+  background: linear-gradient(180deg, rgba(22, 30, 49, 0.3) 0%, rgba(20, 27, 44, 0.7) 100%);
+  border: 2px solid rgba(255, 255, 255, 0.08);
   border-bottom: none;
   border-radius: var(--radius-md) var(--radius-md) 0 0;
-  position: relative;
+  position: absolute;
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 10px;
 }
 
+/* Rieles de la cuna de varada (Negros/Grises tipo grilla) */
 .slipway-column::before {
   content: '';
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 40px;
+  width: 50px;
   background: repeating-linear-gradient(
-    45deg,
-    rgba(245, 158, 11, 0.05),
-    rgba(245, 158, 11, 0.05) 10px,
-    rgba(245, 158, 11, 0.1) 10px,
-    rgba(245, 158, 11, 0.1) 20px
+    0deg,
+    rgba(255, 255, 255, 0.02) 0px,
+    rgba(255, 255, 255, 0.02) 10px,
+    rgba(0, 0, 0, 0.4) 10px,
+    rgba(0, 0, 0, 0.4) 15px
   );
-  border-left: 2px solid rgba(245, 158, 11, 0.15);
-  border-right: 2px solid rgba(245, 158, 11, 0.15);
+  border-left: 3px double rgba(255, 255, 255, 0.15);
+  border-right: 3px double rgba(255, 255, 255, 0.15);
   z-index: 1;
 }
 
@@ -473,19 +463,94 @@ header {
   color: var(--color-warning);
 }
 
+/* Rieles Horizontales de Transferencia (Fondo) */
+.transfer-track-bg {
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0px,
+    rgba(255, 255, 255, 0.03) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.transfer-track-bg::before,
+.transfer-track-bg::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.15);
+}
+.transfer-track-bg::before { top: 15%; }
+.transfer-track-bg::after { bottom: 15%; }
+
+/* Slots de Transferencia que reciben Drop */
+.transfer-popa-slot,
+.transfer-varada-slot {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  z-index: 2;
+}
+
+/* Estilo del Carro de Transferencia Naranja Metálico */
+.transfer-carriage {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 4px;
+  box-shadow: 0 4px 10px rgba(245, 158, 11, 0.35), inset 0 0 8px rgba(0, 0, 0, 0.4);
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 2px;
+  bottom: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Efecto metalizado con remaches */
+.transfer-carriage::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  right: 3px;
+  bottom: 3px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
 /* Dragging Hover states */
 .lane-column.drag-over,
-.slipway-column.drag-over {
+.slipway-column.drag-over,
+.transfer-popa-slot.drag-over,
+.transfer-varada-slot.drag-over {
   background: rgba(16, 185, 129, 0.08);
   border-color: var(--color-success);
   box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+  z-index: 5;
 }
 
 .lane-column.drag-over-invalid,
-.slipway-column.drag-over-invalid {
+.slipway-column.drag-over-invalid,
+.transfer-popa-slot.drag-over-invalid,
+.transfer-varada-slot.drag-over-invalid {
   background: rgba(239, 68, 68, 0.08);
   border-color: var(--color-danger);
   box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+  z-index: 5;
 }
 
 /* Carriles Ocupados */
@@ -627,18 +692,37 @@ header {
 /* Estilos de barcos en diferentes carriles */
 .lane-column .boat-vessel {
   position: absolute;
-  top: 50px; /* Posicionarlo en el medio */
-  height: 220px;
+  top: 30px; /* Centrado en la vía vertical */
+  height: 160px;
   justify-content: space-between;
   border-bottom-width: 4px;
 }
 
 .slipway-column .boat-vessel {
   position: absolute;
-  top: 70px;
-  height: 180px;
+  top: 30px;
+  height: 160px;
   justify-content: space-between;
   z-index: 5;
+}
+
+/* Ubicación y escala de barcos sobre los carros de transferencia */
+.transfer-popa-slot .boat-vessel,
+.transfer-varada-slot .boat-vessel {
+  position: absolute;
+  bottom: 15px; /* Superposición vertical hacia arriba */
+  height: 150px;
+  width: 54px; /* Ancho ajustado */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  justify-content: space-between;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+}
+
+.transfer-popa-slot .boat-vessel:hover,
+.transfer-varada-slot .boat-vessel:hover {
+  transform: translateX(-50%) translateY(-6px) scale(1.05);
 }
 
 /* Grúa Móvil en el Astillero (Elemento Decorativo de Fondo/Acento) */
