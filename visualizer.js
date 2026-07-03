@@ -34,7 +34,7 @@ export class ShipyardVisualizer {
       laneCol.style.left = `${(8 - lane) * 75 + 10}px`;
       laneCol.style.top = '10px';
       laneCol.style.width = '65px';
-      laneCol.style.height = '200px';
+      laneCol.style.height = '300px';
 
       // Etiqueta del carril
       const label = document.createElement('div');
@@ -64,7 +64,7 @@ export class ShipyardVisualizer {
     carril0Col.style.left = `${8 * 75 + 10}px`; // 610px
     carril0Col.style.top = '75px'; // Inicia abajo del transfer superior
     carril0Col.style.width = '65px';
-    carril0Col.style.height = '135px';
+    carril0Col.style.height = '235px';
 
     const label0 = document.createElement('div');
     label0.className = 'lane-label';
@@ -91,7 +91,7 @@ export class ShipyardVisualizer {
     slipwayCol.style.left = '760px';
     slipwayCol.style.top = '75px'; // Inicia abajo del transfer superior
     slipwayCol.style.width = '150px';
-    slipwayCol.style.height = '135px';
+    slipwayCol.style.height = '235px';
 
     const slipwayTitle = document.createElement('div');
     slipwayTitle.className = 'slipway-title';
@@ -150,7 +150,7 @@ export class ShipyardVisualizer {
 
       transPopaSlot.style.position = 'absolute';
       transPopaSlot.style.left = `${(8 - lane) * 75 + 10}px`;
-      transPopaSlot.style.top = '220px';
+      transPopaSlot.style.top = '320px';
       transPopaSlot.style.width = '65px';
       transPopaSlot.style.height = '60px';
 
@@ -205,7 +205,7 @@ export class ShipyardVisualizer {
     const popaTrack = document.createElement('div');
     popaTrack.className = 'transfer-track-bg';
     popaTrack.style.left = '10px';
-    popaTrack.style.top = '220px';
+    popaTrack.style.top = '320px';
     popaTrack.style.width = '665px'; // Desde carril 8 hasta carril 0
     popaTrack.style.height = '60px';
     this.gridElement.appendChild(popaTrack);

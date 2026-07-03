@@ -339,7 +339,7 @@ header {
 /* Distribución del Astillero con Posicionamiento Absoluto */
 .shipyard-grid {
   position: relative;
-  height: 310px;
+  height: 410px;
   width: 920px;
   margin: 0 auto;
 }
