@@ -5,30 +5,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Astillero - Gestión de Carena</title>
   <!-- SEO & Estilos -->
-  <meta name="description" content="Sistema interactivo de gestión de espacio en astillero para la carena de barcos.">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Sistema interactivo de gestión de espacio en astillero para la carena de barcos y registro de juntas de casco.">
+  <link rel="stylesheet" href="styles.css?v=2">
+  <script>
+    window.addEventListener('error', function(e) {
+      var div = document.createElement('div');
+      div.id = 'js-global-error-banner';
+      div.style.background = '#ef4444';
+      div.style.color = '#fff';
+      div.style.padding = '15px';
+      div.style.position = 'fixed';
+      div.style.top = '0';
+      div.style.left = '0';
+      div.style.right = '0';
+      div.style.zIndex = '99999';
+      div.style.fontSize = '14px';
+      div.style.fontFamily = 'monospace';
+      div.innerHTML = '<strong>Error de JS detectado:</strong> ' + e.message + ' en ' + e.filename + ':' + e.lineno;
+      document.body.appendChild(div);
+    });
+  </script>
 </head>
 <body>
   <div class="app-container">
     
-    <!-- HEADER -->
-    <header>
-      <div class="brand-section">
+    <!-- MAIN NAVBAR -->
+    <nav class="main-navbar">
+      <div class="nav-brand">
         <div class="logo-icon">
           <!-- SVG Logo Barco/Timón -->
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ship"><path d="M2 21h20"/><path d="M19.3 14.8C21.1 13.5 22 11.7 22 10c0-1.8-.9-3.5-2.7-4.8C17.5 3.8 15 3 12 3s-5.5.8-7.3 2.2C2.9 6.5 2 8.2 2 10c0 1.7.9 3.5 2.7 4.8C6.5 16.2 9 17 12 17s5.5-.8 7.3-2.2Z"/><path d="M12 3v14"/><path d="M12 10h10"/><path d="M12 10H2"/><path d="m12 3-5 5"/><path d="m12 3 5 5"/></svg>
         </div>
         <div class="brand-info">
-          <h1>ESTADO DEL ASTILLERO</h1>
-          <p>Control Espacial & Programación de Carena</p>
+          <h1>SISTEMA INTEGRADO DE ASTILLERO</h1>
+          <p>Gestión de Espacio & Junta de Casco</p>
         </div>
       </div>
-
-      <!-- Barra rápida de estados superior (inspirada en la imagen de referencia) -->
-      <div class="lane-status-bar" id="lane-status-bar">
-        <!-- Generado dinámicamente: badges para 8, 7, 6, 5, 4, 3, 2, 1, 0, VARADA -->
+      
+      <div class="nav-tabs">
+        <button class="nav-tab-btn active" data-main-tab="shipyard">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-grid"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          Control de Astillero
+        </button>
+        <button class="nav-tab-btn" data-main-tab="juntacasco">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+          Junta de Casco
+        </button>
       </div>
-    </header>
+    </nav>
+
+    <!-- TAB 1: CONTROL DE ASTILLERO -->
+    <div class="main-tab-content active" id="tab-content-shipyard">
+      
+      <!-- HEADER CON STATUS BAR -->
+      <header style="margin-bottom: 1rem; justify-content: flex-end;">
+        <div class="lane-status-bar" id="lane-status-bar">
+          <!-- Generado dinámicamente: badges para 8, 7, 6, 5, 4, 3, 2, 1, 0, VARADA -->
+        </div>
+      </header>
 
     <!-- METRICS DASHBOARD -->
     <div class="metrics-row" id="metrics-dashboard">
@@ -276,9 +310,263 @@
 
       </div>
 
-    </div>
+    </div> <!-- Fin de .main-layout -->
+  </div> <!-- Fin de #tab-content-shipyard -->
 
-  </div>
+  <!-- TAB 2: JUNTA DE CASCO -->
+    <div class="main-tab-content" id="tab-content-juntacasco">
+      
+      <!-- HEADER CON ACCIONES -->
+      <header style="margin-bottom: 1.5rem;">
+        <div class="brand-section">
+          <div class="logo-icon" style="background: rgba(0, 180, 216, 0.15); border: 1px solid var(--color-primary);">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-anchor"><path d="M12 22A10 10 0 0 0 22 12h-4a6 6 0 0 1-12 0H2a10 10 0 0 0 10 10z"/><circle cx="12" cy="5" r="3"/><line x1="12" y1="8" x2="12" y2="22"/></svg>
+          </div>
+          <div class="brand-info">
+            <h1 style="font-size: 1.4rem;">JUNTA DE CASCO</h1>
+            <p>Preparación y Registro de Actividades por Voz</p>
+          </div>
+        </div>
+        <div class="junta-header-actions">
+          <button id="btn-clear-junta" class="btn-action danger" style="width: auto; padding: 8px 16px;" title="Limpiar todas las actividades de la lista">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+            Limpiar Lista
+          </button>
+          <button id="btn-export-junta" class="btn-primary" style="width: auto; padding: 8px 16px;" title="Exportar reporte de actividades a Microsoft Excel">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-file-spreadsheet"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M8 13h8"/><path d="M8 17h8"/><path d="M10 9h2"/></svg>
+            Exportar a Excel
+          </button>
+        </div>
+      </header>
+
+      <!-- METRICS/WIDGETS DE ESTADÍSTICAS -->
+      <div class="junta-stats-row">
+        <div class="junta-stat-card">
+          <div class="junta-stat-icon total">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-todo"><rect x="3" y="5" width="6" height="6" rx="1"/><path d="m3 17 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/><rect x="3" y="11" width="6" height="6" rx="1"/></svg>
+          </div>
+          <div class="junta-stat-details">
+            <span id="stat-total" class="junta-stat-val">0</span>
+            <span class="junta-stat-lbl">Actividades Totales</span>
+          </div>
+        </div>
+        
+        <div class="junta-stat-card">
+          <div class="junta-stat-icon critical">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-alert-triangle"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="junta-stat-details">
+            <span id="stat-critical" class="junta-stat-val">0</span>
+            <span class="junta-stat-lbl">Prioridad Alta</span>
+          </div>
+        </div>
+
+        <div class="junta-stat-card">
+          <div class="junta-stat-icon casco">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shield"><path d="M20 13c0 5-3.5 7.5-7.66 9.7a1 1 0 0 1-.68 0C7.5 20.5 4 18 4 13V6a1 1 0 0 1 .76-.97l8-2a1 1 0 0 1 .48 0l8 2A1 1 0 0 1 20 6Z"/></svg>
+          </div>
+          <div class="junta-stat-details">
+            <span id="stat-casco" class="junta-stat-val">0</span>
+            <span class="junta-stat-lbl">Casco y Calderería</span>
+          </div>
+        </div>
+
+        <div class="junta-stat-card">
+          <div class="junta-stat-icon valvula">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.1a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <div class="junta-stat-details">
+            <span id="stat-valvula" class="junta-stat-val">0</span>
+            <span class="junta-stat-lbl">Válvulas y Rejillas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN GRID DE JUNTA -->
+      <div class="junta-grid">
+        
+        <!-- COLUMNA IZQUIERDA: CONFIG EMBARCACIÓN + RECON VOZ -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+          
+          <!-- CONFIG EMBARCACIÓN -->
+          <div class="vessel-config-card">
+            <h2>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ship"><path d="M2 21h20"/><path d="M19.3 14.8C21.1 13.5 22 11.7 22 10c0-1.8-.9-3.5-2.7-4.8C17.5 3.8 15 3 12 3s-5.5.8-7.3 2.2C2.9 6.5 2 8.2 2 10c0 1.7.9 3.5 2.7 4.8C6.5 16.2 9 17 12 17s5.5-.8 7.3-2.2Z"/><path d="M12 3v14"/><path d="M12 10h10"/><path d="M12 10H2"/><path d="m12 3-5 5"/><path d="m12 3 5 5"/></svg>
+              Datos de la Embarcación
+            </h2>
+            
+            <div class="vessel-info-group">
+              <div class="form-group">
+                <label for="vessel-select">Barco del Astillero</label>
+                <select id="vessel-select" class="form-control">
+                  <!-- Generado dinámicamente con barcos activos + opción "Personalizado" -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="vessel-name">Nombre de Embarcación</label>
+                <input type="text" id="vessel-name" class="form-control" placeholder="Ej. Pesquero Don Lucho">
+              </div>
+
+              <div class="form-group">
+                <label for="vessel-id">Matrícula / Patente</label>
+                <input type="text" id="vessel-id" class="form-control" placeholder="Ej. CO-4598-PM">
+              </div>
+
+              <div class="form-group">
+                <label for="vessel-shipyard">Astillero Programado</label>
+                <input type="text" id="vessel-shipyard" class="form-control" placeholder="Ej. Astillero Chimbote">
+              </div>
+
+              <div class="form-group">
+                <label for="vessel-date">Fecha de Reunión</label>
+                <input type="date" id="vessel-date" class="form-control">
+              </div>
+
+              <div class="form-group">
+                <label for="vessel-template">Cargar Plantilla Base</label>
+                <select id="vessel-template" class="form-control">
+                  <option value="" disabled selected>Seleccione plantilla para cargar...</option>
+                  <option value="pesquero">Embarcación Pesquera (Estándar)</option>
+                  <option value="remolcador">Remolcador de Puerto</option>
+                  <option value="barcaza">Barcaza / Chata</option>
+                  <option value="vacio">Lista Vacía</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- RECON VOZ -->
+          <div class="voice-control-card" id="voice-card">
+            <h2>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              Registro por Voz
+            </h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
+              Haz clic en el micrófono y describe la actividad que deseas agregar a la junta de casco.
+            </p>
+
+            <div class="mic-button-wrapper">
+              <div class="soundwave-pulse"></div>
+              <div class="soundwave-pulse"></div>
+              <div class="soundwave-pulse"></div>
+              <button id="btn-mic" class="mic-btn" title="Iniciar/Detener reconocimiento de voz">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-mic"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              </button>
+            </div>
+
+            <!-- Visualizador -->
+            <div class="visualizer-container" id="visualizer">
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+              <div class="bar"></div>
+            </div>
+
+            <div id="voice-status" class="voice-status" style="margin-bottom: 0.5rem;">Micrófono inactivo</div>
+
+            <!-- Caja de transcripción -->
+            <div id="transcription-preview" class="transcription-preview" contenteditable="true" placeholder="Tu voz se transcribirá aquí..."></div>
+
+            <!-- Campos complementarios -->
+            <div class="form-row" style="width: 100%; margin-top: 0.75rem;">
+              <div class="form-group" style="text-align: left;">
+                <label for="voice-category">Categoría</label>
+                <select id="voice-category" class="form-control">
+                  <option value="Casco (Calderería)">Casco (Calderería)</option>
+                  <option value="Válvulas y Rejillas">Válvulas y Rejillas</option>
+                  <option value="Pintura y Limpieza">Pintura y Limpieza</option>
+                  <option value="Sistemas de Propulsión">Sistemas de Propulsión</option>
+                  <option value="Ánodos de Sacrificio">Ánodos de Sacrificio</option>
+                  <option value="Otros" selected>Otros</option>
+                </select>
+              </div>
+              <div class="form-group" style="text-align: left;">
+                <label for="voice-priority">Prioridad</label>
+                <select id="voice-priority" class="form-control">
+                  <option value="Alta">Alta</option>
+                  <option value="Media" selected>Media</option>
+                  <option value="Baja">Baja</option>
+                </select>
+              </div>
+            </div>
+
+            <button id="btn-add-voice" class="btn-primary" style="margin-top: 0.75rem;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-circle"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+              Agregar Actividad
+            </button>
+
+            <button type="button" id="btn-show-help" class="voice-help-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-help-circle"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+              ¿Cómo usar el dictado por voz?
+            </button>
+          </div>
+
+        </div>
+
+        <!-- COLUMNA DERECHA: TABLA DE ACTIVIDADES -->
+        <div class="card-container" style="align-self: stretch;">
+          <div class="card-header" style="margin-bottom: 1rem;">
+            <h2>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M9 9h6"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+              Actividades Definidas
+            </h2>
+            <div class="filter-actions">
+              <!-- Buscador -->
+              <div class="search-input-wrapper">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                <input type="text" id="junta-search" class="form-control" style="padding-left: 32px;" placeholder="Buscar actividad...">
+              </div>
+              <!-- Filtro Cat -->
+              <select id="junta-filter-category" class="filter-select">
+                <option value="">Todas las categorías</option>
+                <option value="Casco (Calderería)">Casco (Calderería)</option>
+                <option value="Válvulas y Rejillas">Válvulas y Rejillas</option>
+                <option value="Pintura y Limpieza">Pintura y Limpieza</option>
+                <option value="Sistemas de Propulsión">Sistemas de Propulsión</option>
+                <option value="Ánodos de Sacrificio">Ánodos de Sacrificio</option>
+                <option value="Otros">Otros</option>
+              </select>
+              <!-- Filtro Priority -->
+              <select id="junta-filter-priority" class="filter-select">
+                <option value="">Todas las prioridades</option>
+                <option value="Alta">Alta</option>
+                <option value="Media">Media</option>
+                <option value="Baja">Baja</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="activities-table">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>Descripción de Actividad</th>
+                  <th style="width: 180px;">Categoría</th>
+                  <th style="width: 120px;">Prioridad</th>
+                  <th style="width: 100px; text-align: center;">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="junta-activities-list">
+                <!-- Inyectado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div> <!-- Fin de TAB 2: JUNTA DE CASCO -->
+
+  </div> <!-- Fin de .app-container -->
 
   <!-- MODAL DE EDICIÓN DE BARCO -->
   <div class="modal-overlay" id="edit-boat-modal">
@@ -362,13 +650,113 @@
     </div>
   </div>
 
+  <!-- MODAL DE EDICIÓN DE ACTIVIDAD -->
+  <div class="modal-overlay" id="edit-activity-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar Actividad</h3>
+        <button id="btn-close-activity-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="edit-activity-index">
+        <div class="form-group">
+          <label for="edit-activity-description">Descripción de la Actividad</label>
+          <textarea id="edit-activity-description" class="form-control" rows="3" placeholder="Describa la actividad a detalle..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="edit-activity-category">Categoría</label>
+          <select id="edit-activity-category" class="form-control">
+            <option value="Casco (Calderería)">Casco (Calderería)</option>
+            <option value="Válvulas y Rejillas">Válvulas y Rejillas</option>
+            <option value="Pintura y Limpieza">Pintura y Limpieza</option>
+            <option value="Sistemas de Propulsión">Sistemas de Propulsión</option>
+            <option value="Ánodos de Sacrificio">Ánodos de Sacrificio</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="edit-activity-priority">Prioridad</label>
+          <select id="edit-activity-priority" class="form-control">
+            <option value="Alta">Alta</option>
+            <option value="Media">Media</option>
+            <option value="Baja">Baja</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-cancel-activity-edit" class="btn-action" style="width: auto;">Cancelar</button>
+        <button id="btn-save-activity-edit" class="btn-primary" style="width: auto;">Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE AYUDA Y COMANDOS DE VOZ -->
+  <div class="modal-overlay" id="voice-help-modal">
+    <div class="modal-content" style="max-width: 450px;">
+      <div class="modal-header">
+        <h3>Guía del Dictado por Voz</h3>
+        <button id="btn-close-voice-help" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.85rem; color: var(--text-main);">
+        <p style="margin-bottom: 0.75rem;">
+          Esta aplicación utiliza la tecnología del navegador para transcribir lo que dices. Puedes dictar libremente.
+        </p>
+        <h4 style="color: var(--color-primary); margin-top: 0.75rem; font-family: var(--font-title);">Instrucciones de Uso:</h4>
+        <ol style="margin-left: 1.25rem; margin-top: 0.25rem; display: flex; flex-direction: column; gap: 0.4rem;">
+          <li>Haz clic en el botón del micrófono.</li>
+          <li>Acepta los permisos de uso del micrófono en tu navegador si es la primera vez.</li>
+          <li>Empieza a hablar de forma clara. Por ejemplo: <em>"Inspección de hélice y toma de holguras de eje de cola"</em>.</li>
+          <li>El texto transcrito aparecerá en el recuadro. Puedes editarlo haciendo clic sobre él si hay algún error.</li>
+          <li>Presiona <strong>"Agregar Actividad"</strong> para sumarla a la tabla de reportes.</li>
+        </ol>
+        
+        <h4 style="color: var(--color-primary); margin-top: 1rem; font-family: var(--font-title);">Comandos de Voz Inteligentes:</h4>
+        <p style="color: var(--text-muted); margin-bottom: 0.5rem;">
+          Si mencionas ciertas palabras clave, la aplicación intentará configurar la categoría y prioridad automáticamente:
+        </p>
+        <div class="shortcuts-grid">
+          <div class="shortcut-item">
+            <span>"casco" o "plancha"</span>
+            <span>Establece categ. Casco</span>
+          </div>
+          <div class="shortcut-item">
+            <span>"válvula" o "rejilla"</span>
+            <span>Establece categ. Válvulas</span>
+          </div>
+          <div class="shortcut-item">
+            <span>"ánodo" o "zinc"</span>
+            <span>Establece categ. Ánodos</span>
+          </div>
+          <div class="shortcut-item">
+            <span>"pintado" o "limpieza"</span>
+            <span>Establece categ. Pintura</span>
+          </div>
+          <div class="shortcut-item">
+            <span>"eje" o "hélice" o "timón"</span>
+            <span>Establece categ. Propulsión</span>
+          </div>
+          <div class="shortcut-item">
+            <span>"urgente" o "prioridad alta"</span>
+            <span>Establece prioridad Alta</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="margin-top: 1rem;">
+        <button id="btn-close-voice-help-ok" class="btn-primary" style="width: 100%;">Entendido</button>
+      </div>
+    </div>
+  </div>
+
   <!-- CONTENEDOR DE TOAST NOTIFICATIONS -->
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
+  <!-- SheetJS para generar archivos Excel nativos .xlsx sin servidor -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
   <!-- Inicializador Web App -->
-  <script type="module" src="app.js"></script>
+  <script type="module" src="app.js?v=3"></script>
 </body>
 </html>

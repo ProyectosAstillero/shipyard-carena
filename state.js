@@ -17,6 +17,11 @@ export class ShipyardState {
     try {
       const stored = localStorage.getItem(this.storageKey);
       this.state = stored ? JSON.parse(stored) : defaultState;
+      if (this.state.boats) {
+        this.state.boats.forEach(b => {
+          if (!b.activities) b.activities = [];
+        });
+      }
     } catch (e) {
       console.error("Error al cargar localStorage, usando estado vacío:", e);
       this.state = defaultState;
@@ -50,7 +55,13 @@ export class ShipyardState {
         owner: "Copeinca S.A.C.",
         progress: 75,
         color: "#3b82f6", // Azul eléctrico
-        notes: "Limpieza de casco, cambio de zincs de sacrificio, pintado de obra viva."
+        notes: "Limpieza de casco, cambio de zincs de sacrificio, pintado de obra viva.",
+        activities: [
+          { description: "Medición de espesores de casco por ultrasonido en casco y mamparos.", category: "Casco (Calderería)", priority: "Alta" },
+          { description: "Limpieza con chorro de arena (sandblasting) del casco a grado comercial metal blanco (SSPC-SP5).", category: "Pintura y Limpieza", priority: "Alta" },
+          { description: "Cambio de 28 ánodos de zinc de sacrificio (12 lbs) soldados en casco, timón y tobera.", category: "Ánodos de Sacrificio", priority: "Alta" },
+          { description: "Desmontaje, limpieza, rectificado de asientos y calibración de 14 válvulas de fondo y descargas.", category: "Válvulas y Rejillas", priority: "Alta" }
+        ]
       },
       {
         id: "boat_2",
@@ -67,7 +78,11 @@ export class ShipyardState {
         owner: "TASA (Tecnológica de Alimentos S.A.)",
         progress: 45,
         color: "#06b6d4", // Cyan
-        notes: "Mantenimiento de hélice de proa y timón."
+        notes: "Mantenimiento de hélice de proa y timón.",
+        activities: [
+          { description: "Mantenimiento de hélice de proa y timón.", category: "Sistemas de Propulsión", priority: "Alta" },
+          { description: "Medición de espesores de planchas en zonas de desgaste de defensas.", category: "Casco (Calderería)", priority: "Media" }
+        ]
       },
       {
         id: "boat_3",
@@ -84,7 +99,8 @@ export class ShipyardState {
         owner: "Pesquera Centinela",
         progress: 20,
         color: "#f59e0b", // Ámbar/Naranja
-        notes: "Calibración de espesores de casco y reparación de mamparos."
+        notes: "Calibración de espesores de casco y reparación de mamparos.",
+        activities: []
       },
       {
         id: "boat_4",
@@ -101,7 +117,8 @@ export class ShipyardState {
         owner: "Svitzer Latam",
         progress: 90,
         color: "#10b981", // Verde
-        notes: "Pruebas de tracción y mantenimiento de toberas."
+        notes: "Pruebas de tracción y mantenimiento de toberas.",
+        activities: []
       },
       {
         id: "boat_5",
@@ -118,7 +135,8 @@ export class ShipyardState {
         owner: "Particular",
         progress: 0,
         color: "#ec4899", // Rosa
-        notes: "Inspección general de línea de ejes."
+        notes: "Inspección general de línea de ejes.",
+        activities: []
       },
       {
         id: "boat_6",
@@ -135,7 +153,8 @@ export class ShipyardState {
         owner: "Exalmar",
         progress: 0,
         color: "#8b5cf6", // Violeta
-        notes: "Cambio de válvulas de fondo y rejillas."
+        notes: "Cambio de válvulas de fondo y rejillas.",
+        activities: []
       }
     ];
 
@@ -203,7 +222,8 @@ export class ShipyardState {
       owner: boatData.owner || 'S/D',
       progress: 0,
       color: boatData.color || '#3b82f6',
-      notes: boatData.notes || ''
+      notes: boatData.notes || '',
+      activities: boatData.activities || []
     };
 
     this.state.boats.push(newBoat);
@@ -476,5 +496,33 @@ export class ShipyardState {
       capacity: totalCapacity,
       occupancyPercentage: Math.round((occupiedLanes / totalCapacity) * 100)
     };
+  }
+
+  getGeneralVessel() {
+    const saved = localStorage.getItem('junta_casco_vessel');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { }
+    }
+    return { name: "Pesquero Don Lucho", id: "CO-4598-PM", shipyard: "Astillero Chimbote", date: new Date().toISOString().split('T')[0] };
+  }
+
+  saveGeneralVessel(data) {
+    localStorage.setItem('junta_casco_vessel', JSON.stringify(data));
+  }
+
+  getGeneralActivities() {
+    const saved = localStorage.getItem('junta_casco_activities');
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { }
+    }
+    return [];
+  }
+
+  saveGeneralActivities(activities) {
+    localStorage.setItem('junta_casco_activities', JSON.stringify(activities));
+  }
+
+  getBoatById(boatId) {
+    return this.state.boats.find(b => b.id === boatId) || null;
   }
 }

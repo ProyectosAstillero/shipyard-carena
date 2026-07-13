@@ -1249,3 +1249,521 @@ header {
 .sea-bay-outside .sea-boats-list {
   min-height: 50px;
 }
+
+/* ==========================================================================
+   ESTILOS DE UNIFICACIÓN & TAB PRINCIPAL
+   ========================================================================== */
+
+/* Barra de Navegación Principal */
+.main-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1.5rem;
+  background: rgba(22, 30, 49, 0.75);
+  border: 1px solid var(--border-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px);
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.main-navbar .nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.main-navbar .nav-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-tab-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  outline: none;
+  color: var(--text-muted);
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-tab-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.nav-tab-btn:hover {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.nav-tab-btn.active {
+  background: linear-gradient(135deg, var(--color-primary), #1d4ed8);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Contenedores de pestaña principal */
+.main-tab-content {
+  display: none;
+  animation: fadeIn var(--transition-normal);
+}
+
+.main-tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   ESTILOS ADICIONALES PARA JUNTA DE CASCO
+   ========================================================================== */
+
+/* Contenedor Header de Acciones de Junta de Casco */
+.junta-header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.junta-header-actions select {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+.junta-header-actions select:focus {
+  border-color: var(--color-primary);
+}
+
+.junta-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .junta-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Widgets de Estadísticas de Junta de Casco */
+.junta-stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.junta-stat-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.junta-stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.junta-stat-icon.total { background: rgba(59, 130, 246, 0.15); color: var(--color-primary); }
+.junta-stat-icon.critical { background: rgba(239, 68, 68, 0.15); color: var(--color-danger); }
+.junta-stat-icon.casco { background: rgba(16, 185, 129, 0.15); color: var(--color-success); }
+.junta-stat-icon.valvula { background: rgba(245, 158, 11, 0.15); color: var(--color-warning); }
+
+.junta-stat-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.junta-stat-val {
+  font-family: var(--font-title);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.junta-stat-lbl {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Tarjetas Específicas de Junta */
+.vessel-config-card,
+.voice-control-card {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  backdrop-filter: blur(20px);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.vessel-config-card h2,
+.voice-control-card h2 {
+  font-family: var(--font-title);
+  font-size: 1.2rem;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.5rem;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vessel-config-card h2 svg,
+.voice-control-card h2 svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Dictado por voz */
+.voice-control-card {
+  align-items: center;
+  text-align: center;
+}
+
+.mic-button-wrapper {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0;
+}
+
+.mic-btn {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), #1d4ed8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  transition: var(--transition-fast);
+  z-index: 2;
+}
+
+.mic-btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+}
+
+.mic-btn svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* Ondas de Pulso */
+.soundwave-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(59, 130, 246, 0.2);
+  animation: pulse 2s infinite ease-out;
+  opacity: 0;
+  z-index: 1;
+}
+
+.soundwave-pulse:nth-child(2) { animation-delay: 0.6s; }
+.soundwave-pulse:nth-child(3) { animation-delay: 1.2s; }
+
+@keyframes pulse {
+  0% { transform: scale(0.7); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.voice-status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+
+.voice-status.listening {
+  color: var(--color-primary);
+  text-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+}
+
+/* Equalizador */
+.visualizer-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 20px;
+  width: 100%;
+  margin: 0.25rem 0;
+}
+
+.visualizer-container .bar {
+  width: 3px;
+  height: 4px;
+  background-color: var(--text-dark);
+  border-radius: 1px;
+  transition: height 0.1s ease, background-color 0.3s ease;
+}
+
+.voice-control-card.recording .bar {
+  background-color: var(--color-primary);
+  animation: equalize 1.2s infinite alternate ease-in-out;
+}
+
+.voice-control-card.recording .bar:nth-child(2) { animation-delay: 0.15s; }
+.voice-control-card.recording .bar:nth-child(3) { animation-delay: 0.3s; }
+.voice-control-card.recording .bar:nth-child(4) { animation-delay: 0.45s; }
+.voice-control-card.recording .bar:nth-child(5) { animation-delay: 0.1s; }
+.voice-control-card.recording .bar:nth-child(6) { animation-delay: 0.25s; }
+.voice-control-card.recording .bar:nth-child(7) { animation-delay: 0.4s; }
+.voice-control-card.recording .bar:nth-child(8) { animation-delay: 0.2s; }
+.voice-control-card.recording .bar:nth-child(9) { animation-delay: 0.35s; }
+.voice-control-card.recording .bar:nth-child(10) { animation-delay: 0.15s; }
+
+@keyframes equalize {
+  0% { height: 4px; }
+  100% { height: 20px; }
+}
+
+.transcription-preview {
+  width: 100%;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  text-align: left;
+  min-height: 70px;
+  max-height: 100px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  outline: none;
+}
+
+.transcription-preview.has-text {
+  color: var(--text-main);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.voice-help-btn {
+  background: transparent;
+  border: none;
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: underline;
+  margin-top: 5px;
+}
+
+.voice-help-btn:hover {
+  color: #fff;
+}
+
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.shortcut-item {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.shortcut-item span:first-child {
+  color: var(--color-primary);
+  font-weight: 600;
+}
+
+.shortcut-item span:last-child {
+  color: var(--text-muted);
+}
+
+/* Tabla de Actividades de Junta */
+.activities-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.activities-table th {
+  padding: 10px 12px;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.08);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.activities-table td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  font-size: 0.85rem;
+  vertical-align: middle;
+}
+
+.activities-table tbody tr {
+  transition: var(--transition-fast);
+}
+
+.activities-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.01);
+}
+
+/* Badges de prioridades */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 50px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.badge-alta {
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--color-danger);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.badge-media {
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--color-warning);
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badge-baja {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.badge-cat {
+  background: rgba(59, 130, 246, 0.08);
+  color: var(--color-primary);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.btn-table-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: var(--transition-fast);
+}
+
+.btn-table-icon:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-main);
+}
+
+.btn-table-icon.edit:hover {
+  color: var(--color-primary);
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.btn-table-icon.delete:hover {
+  color: var(--color-danger);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.btn-table-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 2.5rem 1.5rem !important;
+}
+
+.empty-state-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.empty-state-content svg {
+  width: 40px;
+  height: 40px;
+  color: rgba(255, 255, 255, 0.05);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 12px;
+  margin-top: 15px;
+}
+
+/* Modificar el botón de ver Junta de Casco en el inspector */
+.inspector-junta-btn {
+  margin-bottom: 6px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  color: var(--color-primary);
+}
+
+.inspector-junta-btn:hover {
+  background: var(--color-primary);
+  color: #0b0f19;
+}
