@@ -750,12 +750,21 @@ class ShipyardApp {
         { description: "Reparación por calderería de abolladura en plancha de babor cerca del trancanil (espesor 12mm).", category: "Casco (Calderería)", priority: "Media" }
       ],
       remolcador: [
-        { description: "Desmontaje completo e inspección de unidades de propulsión azimutal (Schottel).", category: "Sistemas de Propulsión", priority: "Alta" },
-        { description: "Medición de espesores de planchas en zonas de desgaste de defensas de babor y estribor.", category: "Casco (Calderería)", priority: "Media" },
-        { description: "Preparación de superficie y pintado de cubierta principal con esquema antideslizante.", category: "Pintura y Limpieza", priority: "Media" },
-        { description: "Desmontaje e inspección de válvulas de toma de mar principal de enfriamiento de motores.", category: "Válvulas y Rejillas", priority: "Alta" },
-        { description: "Instalación de 16 ánodos de zinc en toberas de propulsión y rejillas de fondo.", category: "Ánodos de Sacrificio", priority: "Alta" },
-        { description: "Reparación de soldaduras fisuradas en bitas de amarre y defensas de proa.", category: "Casco (Calderería)", priority: "Alta" }
+        { description: "Calibración de espesores de planchas de casco. Distribución: dos anillos estructurales en proa y popa.", category: "Casco (Calderería)", priority: "Alta" },
+        { description: "Arenado comercial (Sa-2) al 100% de la obra viva, incluyendo toberas.", category: "Pintura y Limpieza", priority: "Alta" },
+        { description: "Aplicación del esquema de pintura en obra viva / 04 capas (Plan de Pintado de 5 años).", category: "Pintura y Limpieza", priority: "Alta" },
+        { description: "Corte y soldeo (reemplazo) de 45 ánodos de zinc de sacrificio soldables en el casco.", category: "Ánodos de Sacrificio", priority: "Alta" },
+        { description: "Mantenimiento completo (desmontaje, limpieza, asentado y pruebas) de válvulas de fondo tipo globo (DN350, DN250 y DN200).", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "Mantenimiento de canastillos portafiltros de válvulas de fondo.", category: "Válvulas y Rejillas", priority: "Media" },
+        { description: "Desmontaje, montaje y cambio de sellos de hélices del sistema de propulsión azimutal.", category: "Sistemas de Propulsión", priority: "Alta" },
+        { description: "Limpieza y pulido de palas de hélices.", category: "Sistemas de Propulsión", priority: "Media" },
+        { description: "Arriado, arenado, pintado e izado de cadenas y anclas de babor (BR) y estribor (ER).", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "Calibración de diámetros de eslabones de cadena de fondeo (10 eslabones por paño).", category: "Otros", priority: "Media" },
+        { description: "Desmontaje, montaje y mantenimiento de 16 llantas de defensa de casco.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "Cambio de 10 cáncamos de llantas (85x100x25mm) y grilletes/cadenas de defensas de casco.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "Limpieza y desgasificación de tanques de combustible (uso diario y almacenamiento) con desmontaje de tapas de registro.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "Limpieza mecánica y aplicación de 1 capa de pintura anticorrosiva en el pañol de cadenas.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "Limpieza e inspección de sentinas en la sala de máquinas.", category: "Pintura y Limpieza", priority: "Media" }
       ],
       barcaza: [
         { description: "Apertura de tapas de registro de tanques de lastre para inspección estructural interna.", category: "Otros", priority: "Alta" },
