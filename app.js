@@ -750,21 +750,83 @@ class ShipyardApp {
         { description: "Reparación por calderería de abolladura en plancha de babor cerca del trancanil (espesor 12mm).", category: "Casco (Calderería)", priority: "Media" }
       ],
       remolcador: [
-        { description: "Calibración de espesores de planchas de casco. Distribución: dos anillos estructurales en proa y popa.", category: "Casco (Calderería)", priority: "Alta" },
-        { description: "Arenado comercial (Sa-2) al 100% de la obra viva, incluyendo toberas.", category: "Pintura y Limpieza", priority: "Alta" },
-        { description: "Aplicación del esquema de pintura en obra viva / 04 capas (Plan de Pintado de 5 años).", category: "Pintura y Limpieza", priority: "Alta" },
-        { description: "Corte y soldeo (reemplazo) de 45 ánodos de zinc de sacrificio soldables en el casco.", category: "Ánodos de Sacrificio", priority: "Alta" },
-        { description: "Mantenimiento completo (desmontaje, limpieza, asentado y pruebas) de válvulas de fondo tipo globo (DN350, DN250 y DN200).", category: "Válvulas y Rejillas", priority: "Alta" },
-        { description: "Mantenimiento de canastillos portafiltros de válvulas de fondo.", category: "Válvulas y Rejillas", priority: "Media" },
-        { description: "Desmontaje, montaje y cambio de sellos de hélices del sistema de propulsión azimutal.", category: "Sistemas de Propulsión", priority: "Alta" },
-        { description: "Limpieza y pulido de palas de hélices.", category: "Sistemas de Propulsión", priority: "Media" },
-        { description: "Arriado, arenado, pintado e izado de cadenas y anclas de babor (BR) y estribor (ER).", category: "Pintura y Limpieza", priority: "Media" },
-        { description: "Calibración de diámetros de eslabones de cadena de fondeo (10 eslabones por paño).", category: "Otros", priority: "Media" },
-        { description: "Desmontaje, montaje y mantenimiento de 16 llantas de defensa de casco.", category: "Casco (Calderería)", priority: "Media" },
-        { description: "Cambio de 10 cáncamos de llantas (85x100x25mm) y grilletes/cadenas de defensas de casco.", category: "Casco (Calderería)", priority: "Media" },
-        { description: "Limpieza y desgasificación de tanques de combustible (uso diario y almacenamiento) con desmontaje de tapas de registro.", category: "Pintura y Limpieza", priority: "Media" },
-        { description: "Limpieza mecánica y aplicación de 1 capa de pintura anticorrosiva en el pañol de cadenas.", category: "Pintura y Limpieza", priority: "Media" },
-        { description: "Limpieza e inspección de sentinas en la sala de máquinas.", category: "Pintura y Limpieza", priority: "Media" }
+        // 1. SERVICIOS EN DIQUE
+        { description: "1.1 CONFECCIÓN DE CAMA DE VARADO.", category: "Otros", priority: "Media" },
+        { description: "1.2 VARADO/ DESVARADO DE REMOLCADOR.", category: "Otros", priority: "Alta" },
+        { description: "1.3 ESTADÍA EN DIQUE DIAS APROX.", category: "Otros", priority: "Media" },
+        { description: "1.4 SERVICIO DE SEGURIDAD INDUSTRIAL DIAS APROX.", category: "Otros", priority: "Media" },
+        { description: "1.5 LIMPIEZA DE RESIDUOS DEL PLAN DEL DIQUE (ESCORIA).", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "1.6 ENERGÍA ELÉCTRICA: CONEXIÓN / DECONEXIÓN.", category: "Otros", priority: "Media" },
+        { description: "1.7 ENERGÍA ELÉCTRICA: SUMINISTRO ENERGÍA 220 / 440 VAC.", category: "Otros", priority: "Media" },
+        { description: "1.8 AGUA DULCE: CONEXIÓN / DESCONEXIÓN.", category: "Otros", priority: "Media" },
+        { description: "1.9 AGUA DULCE: SUMINISTRO PARA CONSUMO.", category: "Otros", priority: "Media" },
+        { description: "1.10 LÍNEA CONTRA INCENDIO: CONEXIÓN / DESCONEXIÓN.", category: "Otros", priority: "Media" },
+        { description: "1.11 ALQUILER DE GRÚA Y/O MONTACARGAS.", category: "Otros", priority: "Media" },
+        { description: "1.12 INSTALACIÓN / RETIRO DE ANDAMIOS PARA TRABAJOS VARIOS.", category: "Otros", priority: "Media" },
+        
+        // 2. TRATAMIENTO DE SUPERFICIE DE CASCO
+        { description: "2.1 HIDROLAVADO DEL CASCO CON AGUA DULCE A 8000 PSI.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "2.2 ARENADO COMERCIAL (SA-2) AL 100% OBRA VIVA. NOTA: INCLUYE TOBERAS.", category: "Pintura y Limpieza", priority: "Alta" },
+        { description: "2.3 ARENADO COMERCIAL (SA-2) AL 100% OBRA MUERTA.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "2.4 ARENADO COMERCIAL 85A-2) AL 100% CUBIERTA.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "2.5 PINTADO DE OBRA VIVA / 04 CAPAS (PLAN DE PINTADO 05 AÑOS).", category: "Pintura y Limpieza", priority: "Alta" },
+        { description: "2.6 PINTADO DE OBRA MUERTA / 03 CAPAS (PLAN DE PINTADO 05 AÑOS).", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "2.7 PINTADO DE CUBIERTA / 03 CAPAS (PLAN DE PINTADO 05 AÑOS).", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "2.8 PINTADO DE RÓTULOS DE CASCO: NOMBRE Y MATRÍCULA DE LA NAVE, PUERTO DE REGISTRO.", category: "Pintura y Limpieza", priority: "Baja" },
+        { description: "2.9 ARENADO Y PINTADO DE 03 REJILLAS DE CAJAS DE MAR.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "2.10 CEMENTADO DE PERNOS DE REJILLA DE MAR.", category: "Válvulas y Rejillas", priority: "Media" },
+        
+        // 3. CASCO
+        { description: "3.1 CALIBRACIÓN DE ESPESORES DE PLANCHAS DE CASCO. DISTRIBUCIÓN: DOS ANILLOS.", category: "Casco (Calderería)", priority: "Alta" },
+        { description: "3.2 CALIBRACIÓN DE ESPESORES DE PLANCHAS DE TOBERAS BR Y ER.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "3.3 CALIBRACIÓN DE ESPESORES DE PLANCHAS DE CUBIERTA. DISTRIBUCIÓN SEGÚN JUNTA DE CASCO.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "3.4 CALIBRACIÓN DE ESPESOR DE PLANCHAS DE CAJAS DE MAR.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "3.5 CALIBRACIÓN DE ESPESORES DE PLANCHAS MAMPAROS.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "3.6 CORTE (DESMONTAJE) DE ÁNODOS DE ZINC.", category: "Ánodos de Sacrificio", priority: "Alta" },
+        { description: "3.7 SOLIDEO (MONTAJE) DE ÁNODOS DE ZINC.", category: "Ánodos de Sacrificio", priority: "Alta" },
+        { description: "3.8 DESMONTAJE / MONTAJE DE REJILLAS DE CAJAS DE MAR.", category: "Válvulas y Rejillas", priority: "Media" },
+        { description: "3.9 ARENADO Y PINTADO DE REJILLAS DE CAJAS DE MAR.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "3.10 DESMONTAJE / MONTAJE DE LLANTAS DEFENSA DE CASCO.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "3.11 DESMONTAJE / MONTAJE CARNERO DE PROA.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "3.12 VÁLVULAS DE FONDO / DESCARGA / CORTE RÁPIDO COMBUSTIBLE.", category: "Válvulas y Rejillas", priority: "Media" },
+        
+        // 4. MANTENIMIENTO: DESMONTAJE, DESARMADO, ASENTADO, LIMPIEZA, ARMADO, PRUEBA DE ESTANQUEIDAD
+        { description: "4.1 VÁLVULA DE FONDO TIPO GLOBO 350 MM.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.2 VÁLVULA DE FONDO TIPO GLOBO 250 MM.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.3 VÁLVULA DE FONDO TIPO GLOBO 100 MM.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.4 VÁLVULA DE FONDO TIPO GLOBO 50 MM.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.5 VÁLVULA DE FONDO TIPO GLOBO 25 MM.", category: "Válvulas y Rejillas", priority: "Media" },
+        { description: "4.6 VÁLVULA DE FONDO TIPO GLOBO 200 MM.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.7 VÁLVULAS SOPLADO TOMA MAR: VÁLVULA GLOBO DN20.", category: "Válvulas y Rejillas", priority: "Media" },
+        { description: "4.8 VÁLVULAS CHECK 100 MM.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.9 VÁLVULAS CHECK 50 MM.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.10 VÁLVULAS DE CORTE RÁPIDO DE COMBUSTIBLE.", category: "Válvulas y Rejillas", priority: "Alta" },
+        { description: "4.11 MANTENIMIENTO CANASTILLOS PORTAFILTROS VÁLVULAS DE FONDO.", category: "Válvulas y Rejillas", priority: "Media" },
+        { description: "4.12 FLUSHING DE LAS TUBERIAS CROSSOVER.", category: "Otros", priority: "Media" },
+        
+        // 5. SISTEMA DE PROPULSION / GOBIERNO
+        { description: "5.1 DESMONTAJE / MONTAJE FUNDAS GUARDACABOS.", category: "Sistemas de Propulsión", priority: "Media" },
+        { description: "5.2 DESMONTAJE / MONTAJE HÉLICES.", category: "Sistemas de Propulsión", priority: "Alta" },
+        { description: "5.3 LIMPIEZA, PULIDO DE HÉLICES.", category: "Sistemas de Propulsión", priority: "Media" },
+        { description: "5.4 CAMBO DE SELLOS DE HÉLICES.", category: "Sistemas de Propulsión", priority: "Alta" },
+        { description: "5.5 CAMBO DE SELLOS DE LA PART INTERMEDIA (TUBO DE GOBIERNO).", category: "Sistemas de Propulsión", priority: "Alta" },
+        
+        // 6. SISTEMA DE FONDEO
+        { description: "6.1 ARRIADO / ESTIBADO DE CADENAS Y ANCLAS BR Y ER.", category: "Otros", priority: "Media" },
+        { description: "6.2 ARENADO Y PINTADO CADENAS Y ANCLAS BR Y ER.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "6.3 CALIBRACIÓN DE DIÁMETROS DE ESLABONES DE CADENA BR Y ER.", category: "Otros", priority: "Media" },
+        { description: "6.4 IZADO DE CADENAS Y ANCLAS BR Y ER.", category: "Otros", priority: "Media" },
+        
+        // 7. CALDERERÍA Y SOLDADURA
+        { description: "7.3 CAMBO DE CANCAMOS DE LANTAS 85X100X25mm.", category: "Casco (Calderería)", priority: "Media" },
+        { description: "7.4 CAMBO DE GRILLETES Y CADENAS DE DEFENSAS DE CASCO.", category: "Casco (Calderería)", priority: "Media" },
+        
+        // 8. TRABAJOS COMPLEMENTARIOS
+        { description: "8.1 LIMPIEZA DE UN TANQUE DE COMBUSTIBLE DE USO DIARIO.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "8.2 LIMPIEZA DE 2 TANQUE COMBUSTIBLE DE ALMACENAMIENTO.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "8.3 LIMPIEZA DE 2 TANQUES DE AGUA.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "8.4 LIMPIEZA MECANICA MANUAL / 1 CAPA DE PINTURA ANTICORROSIVA PAÑOL DE CADENAS.", category: "Pintura y Limpieza", priority: "Media" },
+        { description: "8.5 LIMPIEZA DE SENTINAS DE SALA MAQUINAS.", category: "Pintura y Limpieza", priority: "Media" }
       ],
       barcaza: [
         { description: "Apertura de tapas de registro de tanques de lastre para inspección estructural interna.", category: "Otros", priority: "Alta" },
